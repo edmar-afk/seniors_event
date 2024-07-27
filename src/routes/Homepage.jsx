@@ -1,4 +1,4 @@
-/* eslint-disable react/no-unescaped-entities */ import bg from "../assets/img/bg.jpg";import { motion } from "framer-motion";
+/* eslint-disable react/no-unescaped-entities */ import bg from "../assets/img/bg.jpg";
 function Homepage() {
 	return (
 		<>
@@ -7,15 +7,11 @@ function Homepage() {
 					<div className="flex flex-wrap items-center sm:-mx-3">
 						<div className="w-full md:w-1/2 md:px-3">
 							<div className="w-full pb-6 space-y-6 sm:max-w-md lg:max-w-lg md:space-y-4 lg:space-y-8 xl:space-y-9 sm:pr-5 lg:pr-0 md:pb-0">
-								<motion.h1
-									initial={{ opacity: 0, x: -100 }}
-									animate={{ opacity: 1, x: 0 }}
-									transition={{ duration: 1 }}
-									className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl">
+								<h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl">
 									<span>Welcome to</span>
 									<br />
 									<span className="block text-indigo-600 text-4xl"> Senior Citizen Event Scheduling System.</span>
-								</motion.h1>
+								</h1>
 								<p className="mx-auto text-base text-gray-500 sm:max-w-md lg:text-xl md:max-w-3xl">
 									It's never been easier to build beautiful websites that convey your message and tell your story.
 								</p>
