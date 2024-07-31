@@ -2,10 +2,11 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import NoInternetConnection from "./components/NoInternetConnection";
 import Register from "./routes/Register";
 import NotFound from "./components/NotFound";
-import ProtectedRoute from "./components/ProtectedRoute";
 import Homepage from "./routes/Homepage";
 import NavBar from "./components/Navbar";
-import Login from './routes/Login'
+import Login from "./routes/Login";
+import SeniorsAuth from "./routes/SeniorsAuth";
+
 function Logout() {
 	localStorage.clear();
 	return <Navigate to="/" />;
@@ -44,17 +45,10 @@ function App() {
 						}
 					/>
 					<Route
-						path="/home"
-						element={<ProtectedRoute>{/* Components specific to the Home route */}</ProtectedRoute>}
+						path="/seniors-dashboard"
+						element={<SeniorsAuth />}
 					/>
-					<Route
-						path="/profile"
-						element={<ProtectedRoute>{/* Components specific to the Profile route */}</ProtectedRoute>}
-					/>
-					<Route
-						path="/rental"
-						element={<ProtectedRoute>{/* Components specific to the Rental route */}</ProtectedRoute>}
-					/>
+
 					<Route
 						path="/logout"
 						element={<Logout />}

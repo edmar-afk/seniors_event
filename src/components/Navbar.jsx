@@ -1,4 +1,5 @@
-import AppBar from "@mui/material/AppBar";import Box from "@mui/material/Box";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -12,10 +13,10 @@ export default function NavBar() {
 						variant="h6"
 						component="div"
 						sx={{ flexGrow: 1, ml: 2, position: "sticky" }}>
-						DSWD Pension Release
+						<Link to={"/"}>DSWD Pension Release</Link>
 					</Typography>
 					<Button color="inherit">
-						<Link to={'/login'}>Login</Link>
+						<Link to={"/login"}>Login</Link>
 					</Button>
 				</Toolbar>
 			</AppBar>

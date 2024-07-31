@@ -1,12 +1,78 @@
-/* eslint-disable react/no-unescaped-entities */
-import { Link } from "react-router-dom";
+/* eslint-disable react/no-unescaped-entities */ import { useState } from "react";import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import bg from "../assets/img/bg.jpg";
+import api from "../assets/api.js";
+import Swal from "sweetalert2";
+
 function Login() {
+	const [formData, setFormData] = useState({
+		number: "",
+		password: "",
+	});
+	const [error, setError] = useState("");
+	const navigate = useNavigate();
+
+	const handleChange = (e) => {
+		setFormData({ ...formData, [e.target.name]: e.target.value });
+	};
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		setError("");
+		try {
+			const res = await api.post("/api/token/", {
+				username: formData.number,
+				password: formData.password,
+			});
+
+			// Store tokens in localStorage
+			localStorage.setItem("ACCESS_TOKEN", res.data.access);
+			localStorage.setItem("REFRESH_TOKEN", res.data.refresh);
+
+			// Fetch user details
+			const userRes = await api.get("/api/user/", {
+				headers: {
+					Authorization: `Bearer ${res.data.access}`,
+				},
+			});
+
+			localStorage.setItem("userData", JSON.stringify(userRes.data));
+			const { first_name } = userRes.data;
+			let timerInterval;
+			Swal.fire({
+				icon: "success",
+				title: `Welcome ${first_name}!`,
+				html: "<h2>Login Success!</h2><br/> Redirecting to Dashboard in <b></b> seconds.",
+				timer: 4000,
+				timerProgressBar: true,
+				showConfirmButton: false, // Hide the OK button
+				didOpen: () => {
+					const timer = Swal.getPopup().querySelector("b");
+					timerInterval = setInterval(() => {
+						timer.textContent = `${Math.ceil(Swal.getTimerLeft() / 1000)}`;
+					}, 100);
+				},
+				willClose: () => {
+					clearInterval(timerInterval);
+				},
+			}).then((result) => {
+				if (result.dismiss === Swal.DismissReason.timer) {
+					navigate("/seniors-dashboard");
+				}
+			});
+		} catch (error) {
+			if (error) {
+				// Show error only if status is 401 (Unauthorized)
+				setError("Invalid mobile number or password.");
+			}
+			console.error(error);
+		}
+	};
+
 	return (
 		<>
 			<div className="font-[sans-serif] bg-white">
-				<div className="min-h-screen flex fle-col items-center justify-center py-6 px-4">
+				<div className="min-h-screen flex flex-col items-center justify-center py-6 px-4">
 					<div className="grid md:grid-cols-2 items-center gap-10 max-w-6xl w-full">
 						<div>
 							<img
@@ -15,8 +81,9 @@ function Login() {
 								alt=""
 							/>
 						</div>
-
-						<form className="max-w-md md:ml-auto w-full -mt-16 sm:mt-0">
+						<form
+							className="max-w-md md:ml-auto w-full -mt-32 sm:mt-0"
+							onSubmit={handleSubmit}>
 							<motion.h3
 								className="text-gray-800 text-3xl font-extrabold mb-8"
 								initial={{ scale: 0 }}
@@ -26,7 +93,6 @@ function Login() {
 							</motion.h3>
 
 							<div className="space-y-4">
-							
 								<motion.div
 									initial={{ scale: 0 }}
 									animate={{ scale: 1 }}
@@ -36,6 +102,8 @@ function Login() {
 										type="number"
 										autoComplete="number"
 										required
+										value={formData.number}
+										onChange={handleChange}
 										className="bg-gray-100 w-full text-sm text-gray-800 px-4 py-3.5 rounded-md outline-blue-600 focus:bg-transparent"
 										placeholder="Mobile Number"
 									/>
@@ -49,22 +117,13 @@ function Login() {
 										name="password"
 										type="password"
 										required
+										value={formData.password}
+										onChange={handleChange}
 										className="bg-gray-100 w-full text-sm text-gray-800 px-4 py-3.5 rounded-md outline-blue-600 focus:bg-transparent"
 										placeholder="Password"
 									/>
 								</motion.div>
-								<motion.div
-									initial={{ scale: 0 }}
-									animate={{ scale: 1 }}
-									transition={{ type: "spring", stiffness: 180, bounce: 0.5, delay: 0.25 }}>
-									<input
-										name="password2"
-										type="password"
-										required
-										className="bg-gray-100 w-full text-sm text-gray-800 px-4 py-3.5 rounded-md outline-blue-600 focus:bg-transparent"
-										placeholder="Retype Password"
-									/>
-								</motion.div>
+
 								<motion.div
 									initial={{ scale: 0 }}
 									animate={{ scale: 1 }}
@@ -75,14 +134,12 @@ function Login() {
 										animate={{ scale: 1 }}
 										transition={{ type: "spring", stiffness: 180, bounce: 0.5, delay: 0.35 }}
 										className="text-sm">
-										<a
-											href="jajvascript:void(0);"
-											className="text-blue-600 hover:text-blue-500 font-semibold">
-											Forgot your password?
-										</a>
+										<a className="text-blue-600 hover:text-blue-500 font-semibold">Forgot your password?</a>
 									</motion.div>
 								</motion.div>
 							</div>
+
+							{error && <p className="text-red-500 text-sm mt-4">{error}</p>}
 
 							<motion.div
 								initial={{ scale: 0 }}
@@ -92,7 +149,7 @@ function Login() {
 								<button
 									type="submit"
 									className="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">
-									Register
+									Login
 								</button>
 							</motion.div>
 							<motion.p
@@ -100,7 +157,7 @@ function Login() {
 								animate={{ scale: 1 }}
 								transition={{ type: "spring", stiffness: 180, bounce: 0.5, delay: 0.45 }}
 								className="text-sm mt-12 text-gray-800">
-								Don't have account?{" "}
+								Don't have an account?{" "}
 								<Link
 									to={"/register"}
 									className="text-blue-600 font-semibold hover:underline ml-1">
