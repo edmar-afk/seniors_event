@@ -1,8 +1,11 @@
 /* eslint-disable react/no-unescaped-entities */ import bg from "../assets/img/bg.jpg";
+import Register from "./Register";
+import { Link } from "react-router-dom";
+
 function Homepage() {
 	return (
 		<>
-			<section className="px-2 py-4 bg-white md:px-0 h-screen">
+			<section className="px-2 py-4 bg-white md:px-0 h-full">
 				<div className="container items-center max-w-6xl px-8 mx-auto xl:px-5">
 					<div className="flex flex-wrap items-center sm:-mx-3">
 						<div className="w-full md:w-1/2 md:px-3">
@@ -35,11 +38,11 @@ function Homepage() {
 											<polyline points="12 5 19 12 12 19"></polyline>
 										</svg>
 									</p>
-									<a
-										href="#_"
+									<Link
+										to={'/register'}
 										className="flex items-center px-6 py-3 text-white bg-indigo-600 rounded-md hover:bg-indigo-800 hover:text-gray-100 hover:scale-110 hover:shadow-2xl duration-300">
 										Register
-									</a>
+									</Link>
 								</div>
 							</div>
 						</div>

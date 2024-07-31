@@ -5,6 +5,7 @@ import NotFound from "./components/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Homepage from "./routes/Homepage";
 import NavBar from "./components/Navbar";
+import Login from './routes/Login'
 function Logout() {
 	localStorage.clear();
 	return <Navigate to="/" />;
@@ -26,7 +27,21 @@ function App() {
 					/>
 					<Route
 						path="/register"
-						element={<Register />}
+						element={
+							<>
+								<NavBar />
+								<Register />
+							</>
+						}
+					/>
+					<Route
+						path="/login"
+						element={
+							<>
+								<NavBar />
+								<Login />
+							</>
+						}
 					/>
 					<Route
 						path="/home"
