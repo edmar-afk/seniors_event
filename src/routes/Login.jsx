@@ -1,5 +1,4 @@
-/* eslint-disable react/no-unescaped-entities */ import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+/* eslint-disable react/no-unescaped-entities */ import { useState } from "react";import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import bg from "../assets/img/bg.jpg";
 import api from "../assets/api.js";
@@ -182,7 +181,9 @@ function Login() {
 										"Login"
 									)}
 								</button>
-								{loading ? <p className="animate-fade-in delay-[4000ms]">Please don't refresh the page</p> : null}
+								{loading ? (
+									<p className="animate-fade-in transition  delay-[4000ms]">Please don't refresh the page</p>
+								) : null}
 							</motion.div>
 							<motion.p
 								initial={{ scale: 0 }}

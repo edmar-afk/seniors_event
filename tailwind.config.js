@@ -16,7 +16,7 @@ module.exports = withMT({
 				},
 			},
 			transitionDelay: {
-				1000: "1000ms",
+				4000: "4000ms",
 			},
 		},
 	},
