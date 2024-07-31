@@ -1,10 +1,9 @@
-/* eslint-disable react/no-unescaped-entities */ import { useState } from "react";import { Link, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import bg from "../assets/img/bg.jpg";
+/* eslint-disable react/no-unescaped-entities */ import { useState } from "react";import { Link, useNavigate } from "react-router-dom";import { motion } from "framer-motion";import bg from "../assets/img/bg.jpg";
 import api from "../assets/api.js";
 import Swal from "sweetalert2";
 
 function Login() {
+	const [loading, setLoading] = useState(false);
 	const [formData, setFormData] = useState({
 		number: "",
 		password: "",
@@ -18,7 +17,8 @@ function Login() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		setError("");
+    setError("");
+    setLoading(true);
 		try {
 			const res = await api.post("/api/token/", {
 				username: formData.number,
@@ -46,6 +46,7 @@ function Login() {
 				timer: 4000,
 				timerProgressBar: true,
 				showConfirmButton: false, // Hide the OK button
+				allowOutsideClick: false, // Prevent closing on backdrop click
 				didOpen: () => {
 					const timer = Swal.getPopup().querySelector("b");
 					timerInterval = setInterval(() => {
@@ -66,7 +67,8 @@ function Login() {
 				setError("Invalid mobile number or password.");
 			}
 			console.error(error);
-		}
+    }
+    setLoading(false);
 	};
 
 	return (
@@ -148,8 +150,34 @@ function Login() {
 								className="!mt-8">
 								<button
 									type="submit"
-									className="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">
-									Login
+									className={`w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded text-white ${
+										loading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+									} focus:outline-none`}
+									disabled={loading}>
+									{loading ? (
+										<div className="flex items-center justify-center">
+											<svg
+												className="animate-spin h-5 w-5 mr-3 text-white"
+												xmlns="http://www.w3.org/2000/svg"
+												fill="none"
+												viewBox="0 0 24 24">
+												<circle
+													className="opacity-25"
+													cx="12"
+													cy="12"
+													r="10"
+													stroke="currentColor"
+													strokeWidth="4"></circle>
+												<path
+													className="opacity-75"
+													fill="currentColor"
+													d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+											</svg>
+											Checking Credentials...
+										</div>
+									) : (
+										"Login"
+									)}
 								</button>
 							</motion.div>
 							<motion.p
