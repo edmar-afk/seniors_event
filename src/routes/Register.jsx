@@ -8,6 +8,12 @@ import Swal from "sweetalert2";
 function Register() {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
+	const [validationError, setValidationError] = useState({
+		fullName: "",
+		number: "",
+		password: "",
+		password2: "",
+	});
 	const [formData, setFormData] = useState({
 		fullName: "",
 		number: "",
@@ -18,16 +24,78 @@ function Register() {
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
-		setFormData({
-			...formData,
-			[name]: value,
-		});
+
+		if (name === "number") {
+			// Update form data regardless of validation result
+			setFormData({
+				...formData,
+				[name]: value,
+			});
+
+			// Validate number field
+			const isValid = /^09\d{9}$/.test(value);
+			if (value === "" || isValid) {
+				setValidationError({
+					...validationError,
+					number: "", // Clear error message if valid or empty
+				});
+			} else {
+				setValidationError({
+					...validationError,
+					number: "Invalid mobile number. Must start with 09 and be 11 digits long.",
+				});
+			}
+		} else if (name === "password") {
+			setFormData({
+				...formData,
+				[name]: value,
+			});
+
+			// Validate password
+			if (value.length < 6) {
+				setValidationError({
+					...validationError,
+					password: "Password must be at least 6 characters long.",
+				});
+			} else {
+				setValidationError({
+					...validationError,
+					password: "", // Clear error message if valid
+				});
+			}
+		} else if (name === "password2") {
+			setFormData({
+				...formData,
+				[name]: value,
+			});
+
+			// Validate password2
+			if (value !== formData.password) {
+				setValidationError({
+					...validationError,
+					password2: "Passwords do not match.",
+				});
+			} else {
+				setValidationError({
+					...validationError,
+					password2: "", // Clear error message if valid
+				});
+			}
+		} else {
+			setFormData({
+				...formData,
+				[name]: value,
+			});
+		}
 	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (formData.password !== formData.password2) {
-			setError("Passwords do not match");
+			setValidationError({
+				...validationError,
+				password2: "Passwords do not match.",
+			});
 			return;
 		}
 		setLoading(true);
@@ -74,6 +142,16 @@ function Register() {
 		setLoading(false);
 	};
 
+	const isFormInvalid = () => {
+		return (
+			Object.values(validationError).some((msg) => msg.length > 0) ||
+			!formData.fullName ||
+			!formData.number ||
+			!formData.password ||
+			!formData.password2
+		);
+	};
+
 	return (
 		<>
 			<div className="font-[sans-serif] bg-white">
@@ -112,6 +190,7 @@ function Register() {
 										value={formData.fullName}
 										onChange={handleChange}
 									/>
+									{validationError.fullName && <p className="text-red-600 mt-2">{validationError.fullName}</p>}
 								</motion.div>
 								<motion.div
 									initial={{ scale: 0 }}
@@ -127,8 +206,8 @@ function Register() {
 										value={formData.number}
 										onChange={handleChange}
 									/>
+									{validationError.number && <p className="text-red-600 mt-2">{validationError.number}</p>}
 								</motion.div>
-
 								<motion.div
 									initial={{ scale: 0 }}
 									animate={{ scale: 1 }}
@@ -142,6 +221,7 @@ function Register() {
 										value={formData.password}
 										onChange={handleChange}
 									/>
+									{validationError.password && <p className="text-red-600 mt-2">{validationError.password}</p>}
 								</motion.div>
 								<motion.div
 									initial={{ scale: 0 }}
@@ -156,6 +236,7 @@ function Register() {
 										value={formData.password2}
 										onChange={handleChange}
 									/>
+									{validationError.password2 && <p className="text-red-600 mt-2">{validationError.password2}</p>}
 								</motion.div>
 								<motion.div
 									initial={{ scale: 0 }}
@@ -175,11 +256,10 @@ function Register() {
 							<motion.div
 								initial={{ scale: 0 }}
 								animate={{ scale: 1 }}
-								transition={{ type: "spring", stiffness: 180, bounce: 0.5, delay: 0.4 }}
-								className="!mt-8">
+								transition={{ type: "spring", stiffness: 180, bounce: 0.5, delay: 0.4 }}>
 								<button
 									type="submit"
-									className={`w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded text-white ${
+									className={`w-full shadow-xl mt-8 py-2.5 px-4 text-sm font-semibold rounded text-white ${
 										loading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
 									} focus:outline-none`}
 									disabled={loading}>
@@ -202,26 +282,15 @@ function Register() {
 													fill="currentColor"
 													d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
 											</svg>
-											Validating...
+											Registering... Please Wait.
 										</div>
 									) : (
-										"Register"
+										"Login"
 									)}
 								</button>
-								{error && <p className="mt-4 text-red-600">{error}</p>}
 							</motion.div>
-							<motion.p
-								initial={{ scale: 0 }}
-								animate={{ scale: 1 }}
-								transition={{ type: "spring", stiffness: 180, bounce: 0.5, delay: 0.45 }}
-								className="text-sm mt-12 text-gray-800">
-								Already have an account?{" "}
-								<Link
-									to={"/login"}
-									className="text-blue-600 font-semibold hover:underline ml-1">
-									Login here
-								</Link>
-							</motion.p>
+
+							{error && <p className="text-red-600 mt-4 text-sm">{error}</p>}
 						</form>
 					</div>
 				</div>
