@@ -1,4 +1,7 @@
-/* eslint-disable react/no-unescaped-entities */ import { useState } from "react";import { Link, useNavigate } from "react-router-dom";import { motion } from "framer-motion";import bg from "../assets/img/bg.jpg";
+/* eslint-disable react/no-unescaped-entities */ import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import bg from "../assets/img/bg.jpg";
 import api from "../assets/api.js";
 import Swal from "sweetalert2";
 
@@ -17,8 +20,8 @@ function Login() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-    setError("");
-    setLoading(true);
+		setError("");
+		setLoading(true);
 		try {
 			const res = await api.post("/api/token/", {
 				username: formData.number,
@@ -67,8 +70,8 @@ function Login() {
 				setError("Invalid mobile number or password.");
 			}
 			console.error(error);
-    }
-    setLoading(false);
+		}
+		setLoading(false);
 	};
 
 	return (
@@ -179,6 +182,7 @@ function Login() {
 										"Login"
 									)}
 								</button>
+								{loading ? <p className="animate-fade-in delay-[4000ms]">Please don't refresh the page</p> : null}
 							</motion.div>
 							<motion.p
 								initial={{ scale: 0 }}
