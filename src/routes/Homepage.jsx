@@ -1,7 +1,4 @@
-/* eslint-disable react/no-unescaped-entities */ import bg from "../assets/img/bg.jpg";
-import Register from "./Register";
-import { Link } from "react-router-dom";
-
+/* eslint-disable react/no-unescaped-entities */ import bg from "../assets/img/bg.jpg";import { Link } from "react-router-dom";
 function Homepage() {
 	return (
 		<>
@@ -39,7 +36,7 @@ function Homepage() {
 										</svg>
 									</p>
 									<Link
-										to={'/register'}
+										to={"/register"}
 										className="flex items-center px-6 py-3 text-white bg-indigo-600 rounded-md hover:bg-indigo-800 hover:text-gray-100 hover:scale-110 hover:shadow-2xl duration-300">
 										Register
 									</Link>

@@ -1,6 +1,4 @@
-/* eslint-disable react/no-unescaped-entities */ import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+/* eslint-disable react/no-unescaped-entities */ import { useState } from "react";import { Link, useNavigate } from "react-router-dom";import { motion } from "framer-motion";
 import bg from "../assets/img/bg.jpg";
 import api from "../assets/api";
 import Swal from "sweetalert2";
@@ -260,9 +258,13 @@ function Register() {
 								<button
 									type="submit"
 									className={`w-full shadow-xl mt-8 py-2.5 px-4 text-sm font-semibold rounded text-white ${
-										loading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+										loading
+											? "bg-gray-400"
+											: isFormInvalid()
+											? "bg-red-600 hover:bg-red-700"
+											: "bg-blue-600 hover:bg-blue-700"
 									} focus:outline-none`}
-									disabled={loading}>
+									disabled={loading || isFormInvalid()}>
 									{loading ? (
 										<div className="flex items-center justify-center">
 											<svg
@@ -285,12 +287,24 @@ function Register() {
 											Registering... Please Wait.
 										</div>
 									) : (
-										"Login"
+										"Register"
 									)}
 								</button>
 							</motion.div>
 
-							{error && <p className="text-red-600 mt-4 text-sm">{error}</p>}
+							{error && <p className="text-red-600 mt-0 text-sm">{error}</p>}
+							<motion.p
+								initial={{ scale: 0 }}
+								animate={{ scale: 1 }}
+								transition={{ type: "spring", stiffness: 180, bounce: 0.5, delay: 0.45 }}
+								className="text-sm mt-8 text-gray-800">
+								Already have an account?{" "}
+								<Link
+									to={"/login"}
+									className="text-blue-600 font-semibold hover:underline ml-1">
+									Login here
+								</Link>
+							</motion.p>
 						</form>
 					</div>
 				</div>

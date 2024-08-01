@@ -6,7 +6,6 @@ import Homepage from "./routes/Homepage";
 import NavBar from "./components/Navbar";
 import Login from "./routes/Login";
 import SeniorsAuth from "./routes/SeniorsAuth";
-
 function Logout() {
 	localStorage.clear();
 	return <Navigate to="/" />;
