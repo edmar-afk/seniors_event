@@ -127,7 +127,7 @@ export default function EventCalendar() {
 							))}
 						</div>
 					</div>
-					<section className="mt-12 md:mt-0 md:ml-8 p-8 rounded-xl shadow-xl bg-gray-200 flex-none w-[400px]">
+					<section className="mt-12 md:mt-0 md:ml-8 p-8 rounded-xl shadow-xl bg-gray-200 flex-none w-full max-w-[400px]">
 						<h2 className="font-semibold text-gray-900">
 							Pension Release for{" "}
 							<time dateTime={format(selectedDay, "yyyy-MM-dd")}>{format(selectedDay, "MMM dd, yyy")}</time>
