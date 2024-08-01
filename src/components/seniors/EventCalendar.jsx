@@ -1,4 +1,6 @@
-/* eslint-disable react/prop-types */import { Menu, Transition } from "@headlessui/react";import { DotsVerticalIcon } from "@heroicons/react/outline";import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
+/* eslint-disable react/prop-types */ import { Menu, Transition } from "@headlessui/react";
+import { DotsVerticalIcon } from "@heroicons/react/outline";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import {
 	add,
 	eachDayOfInterval,
@@ -19,42 +21,41 @@ const meetings = [
 	{
 		id: 1,
 		name: "Leslie Alexander",
-		imageUrl:
-			"https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-		startDatetime: "2024-05-11T13:00",
-		endDatetime: "2024-05-11T14:30",
+		imageUrl: "",
+		startDatetime: "2024-08-11T13:00",
+		endDatetime: "2024-08-11T14:30",
 	},
 	{
 		id: 2,
 		name: "Michael Foster",
 		imageUrl:
 			"https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-		startDatetime: "2024-05-20T09:00",
-		endDatetime: "2024-05-20T11:30",
+		startDatetime: "2024-08-20T09:00",
+		endDatetime: "2024-08-20T11:30",
 	},
 	{
 		id: 3,
 		name: "Dries Vincent",
 		imageUrl:
 			"https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-		startDatetime: "2024-05-20T17:00",
-		endDatetime: "2024-05-20T18:30",
+		startDatetime: "2024-09-20T17:00",
+		endDatetime: "2024-09-20T18:30",
 	},
 	{
 		id: 4,
 		name: "Leslie Alexander",
 		imageUrl:
 			"https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-		startDatetime: "2024-06-09T13:00",
-		endDatetime: "2024-06-09T14:30",
+		startDatetime: "2024-09-09T13:00",
+		endDatetime: "2024-09-09T14:30",
 	},
 	{
 		id: 5,
 		name: "Michael Foster",
 		imageUrl:
 			"https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-		startDatetime: "2024-05-13T14:00",
-		endDatetime: "2024-05-13T14:30",
+		startDatetime: "2024-09-13T14:00",
+		endDatetime: "2024-09-13T14:30",
 	},
 ];
 
@@ -150,9 +151,9 @@ export default function EventCalendar() {
 										<time dateTime={format(day, "yyyy-MM-dd")}>{format(day, "d")}</time>
 									</button>
 
-									<div className="w-1 h-1 mx-auto mt-1">
+									<div className="w-5 h-1 mx-auto mt-1">
 										{meetings.some((meeting) => isSameDay(parseISO(meeting.startDatetime), day)) && (
-											<div className="w-1 h-1 rounded-full bg-red-500"></div>
+											<div className="w-5 h-1 -mt-3 bg-red-500"></div>
 										)}
 									</div>
 								</div>
