@@ -5,7 +5,7 @@ import NotFound from "./components/NotFound";
 import Homepage from "./routes/Homepage";
 import NavBar from "./components/Navbar";
 import Login from "./routes/Login";
-import SeniorsAuth from "./routes/SeniorsAuth";
+import SeniorsDashboard from "./routes/SeniorsDashboard";
 function Logout() {
 	localStorage.clear();
 	return <Navigate to="/" />;
@@ -45,7 +45,7 @@ function App() {
 					/>
 					<Route
 						path="/seniors-dashboard"
-						element={<SeniorsAuth />}
+						element={<SeniorsDashboard />}
 					/>
 
 					<Route
