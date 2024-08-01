@@ -1,10 +1,15 @@
-import { useState } from "react";
-import EventCalendar from "../components/seniors/EventCalendar";
-import Sidebar from "../components/Sidebar";
+import { useState } from "react";import EventCalendar from "../components/seniors/EventCalendar";import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 
+
+const isMobileOrTablet = () => {
+	return /Mobi|Android|iPad|iPhone|iPod/i.test(navigator.userAgent);
+};
+
 function SeniorsDashboard() {
-	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+	// Set initial state based on the device type
+	const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobileOrTablet());
+
 	const userData = JSON.parse(localStorage.getItem("userData"));
 	const userId = userData?.id; // Adjust according to how your user data structure
 
