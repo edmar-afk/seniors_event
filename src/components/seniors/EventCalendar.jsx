@@ -1,5 +1,4 @@
-/* eslint-disable react/prop-types */ import { Menu, Transition } from "@headlessui/react";
-import { DotsVerticalIcon } from "@heroicons/react/outline";
+/* eslint-disable react/prop-types */ import { Menu, Transition } from "@headlessui/react";import { DotsVerticalIcon } from "@heroicons/react/outline";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import {
 	add,
@@ -16,46 +15,14 @@ import {
 	startOfToday,
 } from "date-fns";
 import { Fragment, useState } from "react";
-
+import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
 const meetings = [
 	{
 		id: 1,
-		name: "Leslie Alexander",
-		imageUrl: "",
+		name: "DSWD Posted a Schedule",
+		description: "Purok 4 ang mo anhi sa Munisipyo ani adlawa ug orasa",
 		startDatetime: "2024-08-11T13:00",
 		endDatetime: "2024-08-11T14:30",
-	},
-	{
-		id: 2,
-		name: "Michael Foster",
-		imageUrl:
-			"https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-		startDatetime: "2024-08-20T09:00",
-		endDatetime: "2024-08-20T11:30",
-	},
-	{
-		id: 3,
-		name: "Dries Vincent",
-		imageUrl:
-			"https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-		startDatetime: "2024-09-20T17:00",
-		endDatetime: "2024-09-20T18:30",
-	},
-	{
-		id: 4,
-		name: "Leslie Alexander",
-		imageUrl:
-			"https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-		startDatetime: "2024-09-09T13:00",
-		endDatetime: "2024-09-09T14:30",
-	},
-	{
-		id: 5,
-		name: "Michael Foster",
-		imageUrl:
-			"https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-		startDatetime: "2024-09-13T14:00",
-		endDatetime: "2024-09-13T14:30",
 	},
 ];
 
@@ -88,9 +55,9 @@ export default function EventCalendar() {
 
 	return (
 		<div className="pt-16">
-			<div className="w-full px-4 mx-auto sm:px-7 md:w-full md:px-6">
-				<div className="md:grid md:grid-cols-2 md:divide-x md:divide-gray-200">
-					<div className="md:pr-14 p-3 lg:p-14 rounded-xl shadow-xl bg-gray-200">
+			<div className="w-full px-4 mx-auto sm:px-7 md:px-6">
+				<div className="flex flex-row justify-between flex-wrap">
+					<div className="md:pr-14 p-3 lg:p-14 rounded-xl shadow-xl bg-gray-200 flex-1">
 						<div className="flex items-center">
 							<h2 className="flex-auto font-semibold text-gray-900">{format(firstDayCurrentMonth, "MMMM yyyy")}</h2>
 							<button
@@ -133,7 +100,7 @@ export default function EventCalendar() {
 										onClick={() => setSelectedDay(day)}
 										className={classNames(
 											isEqual(day, selectedDay) && "text-white",
-											!isEqual(day, selectedDay) && isToday(day) && "text-red-500",
+											!isEqual(day, selectedDay) && isToday(day) && "text-blue-500",
 											!isEqual(day, selectedDay) &&
 												!isToday(day) &&
 												isSameMonth(day, firstDayCurrentMonth) &&
@@ -142,7 +109,7 @@ export default function EventCalendar() {
 												!isToday(day) &&
 												!isSameMonth(day, firstDayCurrentMonth) &&
 												"text-gray-400",
-											isEqual(day, selectedDay) && isToday(day) && "bg-red-500",
+											isEqual(day, selectedDay) && isToday(day) && "bg-blue-500",
 											isEqual(day, selectedDay) && !isToday(day) && "bg-gray-900",
 											!isEqual(day, selectedDay) && "hover:bg-gray-200",
 											(isEqual(day, selectedDay) || isToday(day)) && "font-semibold",
@@ -153,14 +120,14 @@ export default function EventCalendar() {
 
 									<div className="w-5 h-1 mx-auto mt-1">
 										{meetings.some((meeting) => isSameDay(parseISO(meeting.startDatetime), day)) && (
-											<div className="w-5 h-1 -mt-3 bg-red-500"></div>
+											<div className="w-5 h-1 -mt-3 bg-blue-500"></div>
 										)}
 									</div>
 								</div>
 							))}
 						</div>
 					</div>
-					<section className="mt-12 md:mt-0 md:ml-14 p-14 rounded-xl shadow-xl bg-gray-200">
+					<section className="mt-12 md:mt-0 md:ml-8 p-8 rounded-xl shadow-xl bg-gray-200 flex-none w-[400px]">
 						<h2 className="font-semibold text-gray-900">
 							Pension Release for{" "}
 							<time dateTime={format(selectedDay, "yyyy-MM-dd")}>{format(selectedDay, "MMM dd, yyy")}</time>
@@ -190,13 +157,13 @@ function Meeting({ meeting }) {
 
 	return (
 		<li className="flex items-center px-4 py-2 space-x-4 group rounded-xl focus-within:bg-gray-100 hover:bg-gray-100">
-			<img
-				src={meeting.imageUrl}
-				alt=""
-				className="flex-none w-10 h-10 rounded-full"
+			<ScheduleOutlinedIcon
+				fontSize="large"
+				className="text-gray-900 animate-spin"
 			/>
 			<div className="flex-auto">
 				<p className="text-gray-900">{meeting.name}</p>
+				<p className="text-blue-900 font-bold">{meeting.description}</p>
 				<p className="mt-0.5">
 					<time dateTime={meeting.startDatetime}>{format(startDateTime, "h:mm a")}</time> -{" "}
 					<time dateTime={meeting.endDatetime}>{format(endDateTime, "h:mm a")}</time>

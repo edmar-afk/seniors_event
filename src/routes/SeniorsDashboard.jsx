@@ -1,4 +1,5 @@
-import { useState } from "react";import EventCalendar from "../components/seniors/EventCalendar";
+import { useState } from "react";
+import EventCalendar from "../components/seniors/EventCalendar";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 
@@ -23,7 +24,6 @@ function SeniorsDashboard() {
 				toggleSidebar={toggleSidebar}
 			/>
 			<div className={`transition-all duration-300 ${isSidebarOpen ? "ml-2 lg:ml-72" : "ml-2 lg:ml-14"} pt-24`}>
-				s
 				<EventCalendar />
 			</div>
 		</>
