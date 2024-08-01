@@ -110,7 +110,7 @@ export default function EventCalendar() {
 												!isSameMonth(day, firstDayCurrentMonth) &&
 												"text-gray-400",
 											isEqual(day, selectedDay) && isToday(day) && "bg-blue-500",
-											isEqual(day, selectedDay) && !isToday(day) && "bg-gray-900",
+											isEqual(day, selectedDay) && !isToday(day) && "bg-blue-700 animate-bounce",
 											!isEqual(day, selectedDay) && "hover:bg-gray-200",
 											(isEqual(day, selectedDay) || isToday(day)) && "font-semibold",
 											"mx-auto flex h-8 w-8 items-center justify-center rounded-full"
