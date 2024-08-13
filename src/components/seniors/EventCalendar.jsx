@@ -1,4 +1,5 @@
-/* eslint-disable react/prop-types */ import { Menu, Transition } from "@headlessui/react";import { DotsVerticalIcon } from "@heroicons/react/outline";
+/* eslint-disable react/prop-types */ import { Menu } from "@headlessui/react";
+import { DotsVerticalIcon } from "@heroicons/react/outline";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import {
 	add,
@@ -14,27 +15,43 @@ import {
 	parseISO,
 	startOfToday,
 } from "date-fns";
-import { Fragment, useState } from "react";
+import ScheduleModal from "../dswd/ScheduleModal";
+import { useState } from "react";
 import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
-const meetings = [
-	{
-		id: 1,
-		name: "DSWD Posted a Schedule",
-		description: "Purok 4 ang mo anhi sa Munisipyo ani adlawa ug orasa",
-		startDatetime: "2024-08-11T13:00",
-		endDatetime: "2024-08-11T14:30",
-	},
-];
+import api from "../../assets/api";
+import { useEffect } from "react";
 
 function classNames(...classes) {
 	return classes.filter(Boolean).join(" ");
 }
 
 export default function EventCalendar() {
+	const userData = JSON.parse(localStorage.getItem("userData"));
 	let today = startOfToday();
 	let [selectedDay, setSelectedDay] = useState(today);
 	let [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"));
 	let firstDayCurrentMonth = parse(currentMonth, "MMM-yyyy", new Date());
+	const [meetings, setMeetings] = useState([]);
+
+	useEffect(() => {
+		const fetchSchedules = async () => {
+			try {
+				const response = await api.get("/api/schedule-list/");
+				const data = response.data.map((schedule) => ({
+					id: schedule.id,
+					name: "DSWD Posted an Schedule", // You may need to adjust this according to your data
+					description: schedule.description,
+					startDatetime: `${schedule.month}T${schedule.startDatetime}`,
+					endDatetime: `${schedule.month}T${schedule.endDatetime}`,
+				}));
+				setMeetings(data);
+			} catch (error) {
+				console.error("Error fetching schedules:", error);
+			}
+		};
+
+		fetchSchedules();
+	}, []);
 
 	let days = eachDayOfInterval({
 		start: firstDayCurrentMonth,
@@ -55,7 +72,18 @@ export default function EventCalendar() {
 
 	return (
 		<div className="pt-16">
-			<div className="w-full px-4 mx-auto sm:px-7 md:px-6">
+			<div className="w-full">
+				{userData.is_superuser ? (
+					<ScheduleModal date={selectedDay.toDateString()} />
+				) : (
+					<div>
+						<p className="text-2xl font-bold">Event Calendar</p>
+						<p className="lg mb-2">
+							View the activities below, and click on a date to see the events provided by DSWD.
+						</p>
+					</div>
+				)}
+
 				<div className="flex flex-row justify-between flex-wrap">
 					<div className="md:pr-14 p-3 lg:p-14 rounded-xl shadow-xl bg-gray-200 flex-1">
 						<div className="flex items-center">
@@ -127,18 +155,18 @@ export default function EventCalendar() {
 							))}
 						</div>
 					</div>
-					<section className="mt-12 md:mt-0 md:ml-8 p-8 rounded-xl shadow-xl bg-gray-200 flex-none w-full max-w-[400px]">
-						<h2 className="font-semibold text-gray-900">
+					<section className="mt-12 md:mt-0 h-[500px] md:ml-8 p-8 rounded-xl shadow-xl bg-gray-200 flex-none w-full max-w-[400px] overflow-y-scroll">
+						<h2 className="font-semibold text-gray-900 sticky -top-8 pb-3 bg-gray-200 z-50">
 							Pension Release for{" "}
 							<time dateTime={format(selectedDay, "yyyy-MM-dd")}>{format(selectedDay, "MMM dd, yyy")}</time>
 						</h2>
+
 						<ol className="mt-4 space-y-1 text-sm leading-6 text-gray-500">
 							{selectedDayMeetings.length > 0 ? (
 								selectedDayMeetings.map((meeting) => (
-									<Meeting
-										meeting={meeting}
-										key={meeting.id}
-									/>
+									<li key={meeting.id}>
+										<Meeting meeting={meeting} />
+									</li>
 								))
 							) : (
 								<p>No Agenda for today.</p>
@@ -156,14 +184,14 @@ function Meeting({ meeting }) {
 	let endDateTime = parseISO(meeting.endDatetime);
 
 	return (
-		<li className="flex items-center px-4 py-2 space-x-4 group rounded-xl focus-within:bg-gray-100 hover:bg-gray-100">
+		<div className="flex items-center px-4 py-2 space-x-4 group rounded-xl focus-within:bg-gray-100 hover:bg-gray-100">
 			<ScheduleOutlinedIcon
 				fontSize="large"
 				className="text-gray-900 animate-spin"
 			/>
 			<div className="flex-auto">
 				<p className="text-gray-900">{meeting.name}</p>
-				<p className="text-blue-900 font-bold">{meeting.description}</p>
+				<p className="text-blue-900 font-bold break-all">{meeting.description}</p>
 				<p className="mt-0.5">
 					<time dateTime={meeting.startDatetime}>{format(startDateTime, "h:mm a")}</time> -{" "}
 					<time dateTime={meeting.endDatetime}>{format(endDateTime, "h:mm a")}</time>
@@ -171,7 +199,7 @@ function Meeting({ meeting }) {
 			</div>
 			<Menu
 				as="div"
-				className="relative opacity-0 focus-within:opacity-100 group-hover:opacity-100">
+				className="relative">
 				<div>
 					<Menu.Button className="-m-2 flex items-center rounded-full p-1.5 text-gray-500 hover:text-gray-600">
 						<span className="sr-only">Open options</span>
@@ -181,46 +209,8 @@ function Meeting({ meeting }) {
 						/>
 					</Menu.Button>
 				</div>
-
-				<Transition
-					as={Fragment}
-					enter="transition ease-out duration-100"
-					enterFrom="transform opacity-0 scale-95"
-					enterTo="transform opacity-100 scale-100"
-					leave="transition ease-in duration-75"
-					leaveFrom="transform opacity-100 scale-100"
-					leaveTo="transform opacity-0 scale-95">
-					<Menu.Items className="absolute right-0 z-10 mt-2 origin-top-right bg-white rounded-md shadow-lg w-36 ring-1 ring-black ring-opacity-5 focus:outline-none">
-						<div className="py-1">
-							<Menu.Item>
-								{({ active }) => (
-									<a
-										href="#"
-										className={classNames(
-											active ? "bg-gray-400 text-gray-900" : "text-gray-700",
-											"block px-4 py-2 text-sm"
-										)}>
-										Edit
-									</a>
-								)}
-							</Menu.Item>
-							<Menu.Item>
-								{({ active }) => (
-									<a
-										href="#"
-										className={classNames(
-											active ? "bg-gray-400 text-gray-900" : "text-gray-700",
-											"block px-4 py-2 text-sm"
-										)}>
-										Cancel
-									</a>
-								)}
-							</Menu.Item>
-						</div>
-					</Menu.Items>
-				</Transition>
 			</Menu>
-		</li>
+		</div>
 	);
 }
 

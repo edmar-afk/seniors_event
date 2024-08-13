@@ -1,5 +1,4 @@
-/* eslint-disable react/no-unescaped-entities */ import { useState } from "react";import { Link, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+/* eslint-disable react/no-unescaped-entities */ import { useState } from "react";import { Link, useNavigate } from "react-router-dom";import { motion } from "framer-motion";
 import bg from "../assets/img/bg.jpg";
 import api from "../assets/api.js";
 import Swal from "sweetalert2";
@@ -38,8 +37,9 @@ function Login() {
 				},
 			});
 
-			localStorage.setItem("userData", JSON.stringify(userRes.data));
-			const { first_name } = userRes.data;
+			const userData = userRes.data;
+			localStorage.setItem("userData", JSON.stringify(userData));
+			const { first_name, is_superuser } = userData;
 			let timerInterval;
 			Swal.fire({
 				icon: "success",
@@ -47,8 +47,8 @@ function Login() {
 				html: "<h2>Login Success!</h2><br/> Redirecting to Dashboard in <b></b> seconds.",
 				timer: 4000,
 				timerProgressBar: true,
-				showConfirmButton: false, // Hide the OK button
-				allowOutsideClick: false, // Prevent closing on backdrop click
+				showConfirmButton: false,
+				allowOutsideClick: false,
 				didOpen: () => {
 					const timer = Swal.getPopup().querySelector("b");
 					timerInterval = setInterval(() => {
@@ -60,12 +60,15 @@ function Login() {
 				},
 			}).then((result) => {
 				if (result.dismiss === Swal.DismissReason.timer) {
-					navigate("/seniors-dashboard");
+					if (is_superuser) {
+						navigate("/admin-dashboard");
+					} else {
+						navigate("/seniors-dashboard");
+					}
 				}
 			});
 		} catch (error) {
 			if (error) {
-				// Show error only if status is 401 (Unauthorized)
 				setError("Invalid mobile number or password.");
 			}
 			console.error(error);

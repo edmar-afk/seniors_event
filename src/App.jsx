@@ -6,6 +6,12 @@ import Homepage from "./routes/Homepage";
 import NavBar from "./components/Navbar";
 import Login from "./routes/Login";
 import SeniorsDashboard from "./routes/SeniorsDashboard";
+import AdminDashboard from "./routes/AdminDashboard";
+import SeniorsList from "./routes/SeniorsList";
+import Submission from './routes/Submission'
+import Scanner from "./routes/Scanner";
+import SubmitRequirements from "./routes/SubmitRequirements";
+import PensionStatus from "./routes/PensionStatus";
 function Logout() {
 	localStorage.clear();
 	return <Navigate to="/" />;
@@ -47,7 +53,30 @@ function App() {
 						path="/seniors-dashboard"
 						element={<SeniorsDashboard />}
 					/>
-
+					<Route
+						path="/admin-dashboard"
+						element={<AdminDashboard />}
+					/>
+					<Route
+						path="/seniors-list"
+						element={<SeniorsList />}
+					/>
+					<Route
+						path="/submission"
+						element={<Submission />}
+					/>
+					<Route
+						path="/file-submit"
+						element={<SubmitRequirements />}
+					/>
+					<Route
+						path="/pension-status"
+						element={<PensionStatus />}
+					/>
+					<Route
+						path="/scanner"
+						element={<Scanner />}
+					/>
 					<Route
 						path="/logout"
 						element={<Logout />}
