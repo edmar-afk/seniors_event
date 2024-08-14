@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";import { useNavigate } from "react-r
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import Footer from "../components/Footer";
-import SubmissionTable from "../components/dswd/Submission";
+import PensionList from "../components/dswd/PensionList";
 
 // Utility function to detect mobile or tablet devices
 const isMobileOrTablet = () => {
@@ -65,7 +65,7 @@ function SeniorsList() {
                     
                     <div></div>
 				</div>
-				<SubmissionTable />
+				<PensionList />
 
 				<Footer />
 			</div>

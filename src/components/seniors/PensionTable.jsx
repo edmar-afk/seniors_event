@@ -1,11 +1,9 @@
-import SwapVertIcon from "@mui/icons-material/SwapVert";
-import { useState, useEffect, useMemo } from "react";
+import SwapVertIcon from "@mui/icons-material/SwapVert";import { useState, useEffect, useMemo } from "react";
 import api from "../../assets/api";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import RequirementsModal from "../RequirementsModal";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-
 const MySwal = withReactContent(Swal);
 
 function PensionTable() {
@@ -36,7 +34,7 @@ function PensionTable() {
 	const handleDelete = (pensionId) => {
 		MySwal.fire({
 			title: "Are you sure?",
-			text: "You won't be able to revert this!",
+			text: "Withdrawing the pension you believe has an error. You won't be able to revert this!",
 			icon: "warning",
 			showCancelButton: true,
 			confirmButtonColor: "#d33",
@@ -111,6 +109,8 @@ function PensionTable() {
 										<RequirementsModal
 											imageUrl={pension.requirement}
 											name={pension.seniors.first_name}
+											title="View Requirements"
+											subTitle="Requirements"
 										/>
 									</div>
 								</div>
@@ -127,9 +127,23 @@ function PensionTable() {
 							<td className="p-4 border-b border-blue-gray-50">
 								<div className="flex items-center gap-3">
 									<div className="flex flex-col">
-										<p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal">
-											{pension.qr}
-										</p>
+										{pension.qr ? (
+											<>
+												<p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal">
+													{pension.qr.split("/").pop()} {/* Extract filename */}
+												</p>
+												<RequirementsModal
+													imageUrl={pension.qr}
+													name={pension.seniors.first_name}
+													title="View QR"
+													subTitle="QR Code"
+												/>
+											</>
+										) : (
+											<p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal">
+												Not yet Issued
+											</p>
+										)}
 									</div>
 								</div>
 							</td>

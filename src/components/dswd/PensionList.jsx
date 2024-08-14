@@ -1,8 +1,8 @@
-import SwapVertIcon from "@mui/icons-material/SwapVert";import { useState, useEffect } from "react";
-import api from "../../assets/api";
-import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-import Swal from "sweetalert2";
+import SwapVertIcon from "@mui/icons-material/SwapVert";import { useState, useEffect } from "react";import api from "../../assets/api";import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import RequirementsModal from "../RequirementsModal";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import AlarmOnIcon from "@mui/icons-material/AlarmOn";
 
 const MySwal = withReactContent(Swal);
 
@@ -15,7 +15,7 @@ function PensionList() {
 
 	useEffect(() => {
 		api
-			.get(`/api/pensions/`)
+			.get(`/api/pensions-list/`)
 			.then((response) => {
 				setPensions(response.data);
 				setLoading(false);
@@ -27,31 +27,6 @@ function PensionList() {
 			});
 	}, []);
 
-	const handleDelete = (pensionId) => {
-		MySwal.fire({
-			title: "Are you sure?",
-			text: "You won't be able to revert this!",
-			icon: "warning",
-			showCancelButton: true,
-			confirmButtonColor: "#d33",
-			cancelButtonColor: "#3085d6",
-			confirmButtonText: "Yes, delete it!",
-		}).then((result) => {
-			if (result.isConfirmed) {
-				api
-					.delete(`/api/pensions/${pensionId}/`)
-					.then(() => {
-						MySwal.fire("Deleted!", "Your pension has been deleted.", "success");
-						setPensions(pensions.filter((pension) => pension.id !== pensionId));
-					})
-					.catch((error) => {
-						console.error("There was an error deleting the pension!", error);
-						MySwal.fire("Error!", "There was an error deleting the pension.", "error");
-					});
-			}
-		});
-	};
-
 	if (loading) {
 		return <div>Loading...</div>;
 	}
@@ -60,6 +35,45 @@ function PensionList() {
 		return <div>{error}</div>;
 	}
 
+	const handleGenerateQr = async (pensionId) => {
+		try {
+			// Show loading state
+			MySwal.fire({
+				title: "Generating QR Code...",
+				text: "Please wait while the QR code is being generated.",
+				allowOutsideClick: false,
+				didOpen: () => {
+					MySwal.showLoading();
+				},
+			});
+
+			// Make the API call to generate the QR code
+			const response = await api.post(`/api/add-qr-to-pension/${pensionId}/`);
+
+			// Check if the QR code was generated successfully
+			if (response.status === 200) {
+				// Refresh the pension list
+				const updatedPensions = pensions.map((pension) =>
+					pension.id === pensionId ? { ...pension, qr: response.data.qr } : pension
+				);
+				setPensions(updatedPensions);
+
+				MySwal.fire({
+					icon: "success",
+					title: "QR Code Generated",
+					text: "The QR code has been successfully generated.",
+				});
+			}
+		} catch (error) {
+			MySwal.fire({
+				icon: "error",
+				title: "Error",
+				text: "There was an error generating the QR code. Please try again.",
+			});
+			console.error("Error generating QR code:", error.response?.data || error.message);
+		}
+	};
+
 	return (
 		<div className="p-6 px-0 bg-white rounded-2xl shadow-2xl overflow-x-auto">
 			<table className="w-full table-auto text-left">
@@ -67,7 +81,20 @@ function PensionList() {
 					<tr>
 						<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
 							<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
+								Name
+								<SwapVertIcon fontSize="small" />
+							</p>
+						</th>
+						<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+							<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
 								Requirements
+								<SwapVertIcon fontSize="small" />
+							</p>
+						</th>
+
+						<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+							<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
+								Date Submitted
 								<SwapVertIcon fontSize="small" />
 							</p>
 						</th>
@@ -79,13 +106,7 @@ function PensionList() {
 						</th>
 						<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
 							<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
-								QR Code Availability
-								<SwapVertIcon fontSize="small" />
-							</p>
-						</th>
-						<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-							<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
-								Date Submitted
+								QR Code
 								<SwapVertIcon fontSize="small" />
 							</p>
 						</th>
@@ -102,42 +123,24 @@ function PensionList() {
 							<td className="p-4 border-b border-blue-gray-50">
 								<div className="flex items-center gap-3">
 									<div className="flex flex-col">
-										<a
-											href={pension.requirement}
-											target="_blank"
-											rel="noopener noreferrer">
-											Requirements
-										</a>
+										<p>{pension.seniors.first_name}</p>
+										<p className="text-xs text-gray-600">{pension.seniors.username}</p>
 									</div>
 								</div>
 							</td>
 							<td className="p-4 border-b border-blue-gray-50">
 								<div className="flex items-center gap-3">
 									<div className="flex flex-col">
-										<p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal">
-											{pension.status}
-										</p>
+										<RequirementsModal
+											imageUrl={pension.requirement}
+											name={pension.seniors.first_name}
+											title="View Requirements"
+											subTitle="Requirements"
+										/>
 									</div>
 								</div>
 							</td>
-							<td className="p-4 border-b border-blue-gray-50">
-								<div className="flex items-center gap-3">
-									<div className="flex flex-col">
-										{pension.qr ? (
-											<a
-												href={pension.qr}
-												target="_blank"
-												rel="noopener noreferrer">
-												QR Code Available
-											</a>
-										) : (
-											<p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal">
-												No QR Code
-											</p>
-										)}
-									</div>
-								</div>
-							</td>
+
 							<td className="p-4 border-b">
 								<div className="w-max">
 									<div className="relative grid items-center font-sans font-bold uppercase whitespace-nowrap select-none text-gray-600 py-1 px-2 text-sm rounded-md">
@@ -151,13 +154,58 @@ function PensionList() {
 									</div>
 								</div>
 							</td>
+							<td className="p-4 border-b border-blue-gray-50">
+								<div className="flex items-center gap-3">
+									<div className="flex flex-col">
+										<p className="block antialiased font-sans text-sm leading-normal text-red-600 font-bold">
+											Notification Not Sent
+										</p>
+									</div>
+								</div>
+							</td>
+							<td className="p-4 border-b border-blue-gray-50">
+								<div className="flex items-center gap-3">
+									<div className="flex flex-col">
+										{pension.qr ? (
+											<>
+												<p className="text-xs">QR Code Available</p>
+												<RequirementsModal
+													imageUrl={pension.qr}
+													name={pension.seniors.first_name}
+													title="View QR"
+													subTitle="QR Code"
+												/>
+											</>
+										) : (
+											<>
+												<p className="block antialiased font-sans text-xs leading-normal text-blue-gray-900 font-normal">
+													No QR Code
+												</p>
+												<button
+													onClick={() => handleGenerateQr(pension.id)}
+													className="text-blue-700 font-bold text-sm">
+													Generate QR Code
+												</button>
+											</>
+										)}
+									</div>
+								</div>
+							</td>
 							<td className="p-4">
 								<button
-									onClick={() => handleDelete(pension.id)}
-									className="flex flex-row items-center select-none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-red-500 hover:scale-110 hover:shadow-2xl duration-300"
-									type="button">
-									<DeleteForeverOutlinedIcon className="mr-1" /> Withdraw
+									className={`flex flex-col items-center select-none font-sans font-medium text-center uppercase transition-all ${
+										pension.qr ? "text-blue-500 hover:scale-110" : "text-gray-500 cursor-not-allowed"
+									} w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none duration-300`}
+									type="button"
+									disabled={!pension.qr}>
+									<NotificationsActiveIcon className="mr-1" /> Sent Notification
 								</button>
+								{/* <button
+									onClick={() => handleDelete(pension.id)}
+									className="flex flex-col items-center select-none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-green-500 hover:scale-110 hover:shadow-2xl duration-300"
+									type="button">
+									<AlarmOnIcon className="mr-1" /> Sent Notification
+								</button> */}
 							</td>
 						</tr>
 					))}
