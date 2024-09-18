@@ -1,4 +1,6 @@
-/* eslint-disable react/no-unescaped-entities */ import { useState } from "react";import { Link, useNavigate } from "react-router-dom";import { motion } from "framer-motion";
+/* eslint-disable react/no-unescaped-entities */import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import bg from "../assets/img/bg.jpg";
 import api from "../assets/api";
 import Swal from "sweetalert2";
@@ -9,22 +11,17 @@ function Register() {
 	const [validationError, setValidationError] = useState({
 		fullName: "",
 		number: "",
+		address: "",
 		password: "",
 		password2: "",
 	});
-	const [formData, setFormData] = useState({
-		fullName: "",
-		number: "",
-		password: "",
-		password2: "",
-	});
+	const [formData, setFormData] = useState({ fullName: "", number: "", address: "", password: "", password2: "" });
 	const navigate = useNavigate();
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 
 		if (name === "number") {
-			// Update form data regardless of validation result
 			setFormData({
 				...formData,
 				[name]: value,
@@ -35,7 +32,7 @@ function Register() {
 			if (value === "" || isValid) {
 				setValidationError({
 					...validationError,
-					number: "", // Clear error message if valid or empty
+					number: "",
 				});
 			} else {
 				setValidationError({
@@ -43,6 +40,11 @@ function Register() {
 					number: "Invalid mobile number. Must start with 09 and be 11 digits long.",
 				});
 			}
+		} else if (name === "address") {
+			setFormData({
+				...formData,
+				[name]: value,
+			});
 		} else if (name === "password") {
 			setFormData({
 				...formData,
@@ -58,7 +60,7 @@ function Register() {
 			} else {
 				setValidationError({
 					...validationError,
-					password: "", // Clear error message if valid
+					password: "",
 				});
 			}
 		} else if (name === "password2") {
@@ -76,7 +78,7 @@ function Register() {
 			} else {
 				setValidationError({
 					...validationError,
-					password2: "", // Clear error message if valid
+					password2: "",
 				});
 			}
 		} else {
@@ -102,6 +104,7 @@ function Register() {
 			const response = await api.post("/api/register/", {
 				username: formData.number,
 				first_name: formData.fullName,
+				last_name: formData.address, // Make sure address is passed as last_name
 				mobile_num: formData.number,
 				password: formData.password,
 			});
@@ -145,6 +148,7 @@ function Register() {
 			Object.values(validationError).some((msg) => msg.length > 0) ||
 			!formData.fullName ||
 			!formData.number ||
+			!formData.address || // Ensure address is included
 			!formData.password ||
 			!formData.password2
 		);
@@ -209,6 +213,31 @@ function Register() {
 								<motion.div
 									initial={{ scale: 0 }}
 									animate={{ scale: 1 }}
+									transition={{ type: "spring", stiffness: 180, bounce: 0.5, delay: 0.15 }}>
+									<select
+										id="address"
+										name="address"
+										className="bg-gray-100 w-full text-sm text-gray-800 px-4 py-3.5 rounded-md outline-blue-600 focus:bg-transparent"
+										value={formData.address}
+										onChange={handleChange}
+										required>
+										<option
+											value=""
+											disabled>
+											Choose a Barangay
+										</option>
+										<option value="Bululawan">Bululawan</option>
+										<option value="Poblacion Lakewood">Poblacion Lakewood</option>
+										<option value="Baking">Baking</option>
+										<option value="Biswangan">Biswangan</option>
+										<option value="Lukuan">Lukuan</option>
+										<option value="Kahayag">Kahayag</option>
+									</select>
+									{validationError.address && <p className="text-red-600 mt-2">{validationError.address}</p>}
+								</motion.div>
+								<motion.div
+									initial={{ scale: 0 }}
+									animate={{ scale: 1 }}
 									transition={{ type: "spring", stiffness: 180, bounce: 0.5, delay: 0.2 }}>
 									<input
 										name="password"
@@ -230,81 +259,35 @@ function Register() {
 										type="password"
 										required
 										className="bg-gray-100 w-full text-sm text-gray-800 px-4 py-3.5 rounded-md outline-blue-600 focus:bg-transparent"
-										placeholder="Retype Password"
+										placeholder="Confirm Password"
 										value={formData.password2}
 										onChange={handleChange}
 									/>
 									{validationError.password2 && <p className="text-red-600 mt-2">{validationError.password2}</p>}
 								</motion.div>
-								<motion.div
-									initial={{ scale: 0 }}
-									animate={{ scale: 1 }}
-									transition={{ type: "spring", stiffness: 180, bounce: 0.5, delay: 0.3 }}
-									className="flex flex-wrap items-center justify-between gap-4">
-									<motion.div
-										initial={{ scale: 0 }}
-										animate={{ scale: 1 }}
-										transition={{ type: "spring", stiffness: 180, bounce: 0.5, delay: 0.35 }}
-										className="text-sm">
-										<a className="text-blue-600 hover:text-blue-500 font-semibold">Forgot your password?</a>
-									</motion.div>
-								</motion.div>
+
+								<div className="pt-2">
+									<button
+										type="submit"
+										disabled={loading || isFormInvalid()}
+										className="bg-blue-600 text-sm w-full py-3.5 rounded-md text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+										{loading ? "Registering..." : "Register"}
+									</button>
+								</div>
+
+								{error && <p className="text-red-600 text-center text-sm mt-4">{error}</p>}
 							</div>
 
-							<motion.div
-								initial={{ scale: 0 }}
-								animate={{ scale: 1 }}
-								transition={{ type: "spring", stiffness: 180, bounce: 0.5, delay: 0.4 }}>
-								<button
-									type="submit"
-									className={`w-full shadow-xl mt-8 py-2.5 px-4 text-sm font-semibold rounded text-white ${
-										loading
-											? "bg-gray-400"
-											: isFormInvalid()
-											? "bg-red-600 hover:bg-red-700"
-											: "bg-blue-600 hover:bg-blue-700"
-									} focus:outline-none`}
-									disabled={loading || isFormInvalid()}>
-									{loading ? (
-										<div className="flex items-center justify-center">
-											<svg
-												className="animate-spin h-5 w-5 mr-3 text-white"
-												xmlns="http://www.w3.org/2000/svg"
-												fill="none"
-												viewBox="0 0 24 24">
-												<circle
-													className="opacity-25"
-													cx="12"
-													cy="12"
-													r="10"
-													stroke="currentColor"
-													strokeWidth="4"></circle>
-												<path
-													className="opacity-75"
-													fill="currentColor"
-													d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-											</svg>
-											Registering... Please Wait.
-										</div>
-									) : (
-										"Register"
-									)}
-								</button>
-							</motion.div>
-
-							{error && <p className="text-red-600 mt-0 text-sm">{error}</p>}
-							<motion.p
-								initial={{ scale: 0 }}
-								animate={{ scale: 1 }}
-								transition={{ type: "spring", stiffness: 180, bounce: 0.5, delay: 0.45 }}
-								className="text-sm mt-8 text-gray-800">
-								Already have an account?{" "}
-								<Link
-									to={"/login"}
-									className="text-blue-600 font-semibold hover:underline ml-1">
-									Login here
-								</Link>
-							</motion.p>
+							<div className="text-center mt-8">
+								<p className="text-sm">
+									Already have an account?{" "}
+									<Link
+										to="/login"
+										className="font-medium text-blue-600 hover:underline">
+										Login
+									</Link>
+								</p>
+							</div>
 						</form>
 					</div>
 				</div>

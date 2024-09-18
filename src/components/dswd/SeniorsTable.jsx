@@ -1,9 +1,4 @@
-import SwapVertIcon from "@mui/icons-material/SwapVert";
-import { useState, useEffect } from "react";
-import api from "../../assets/api";
-import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-
-function SeniorsTable() {
+import SwapVertIcon from "@mui/icons-material/SwapVert";import { useState, useEffect } from "react";import api from "../../assets/api";import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";function SeniorsTable() {
 	const [seniors, setSeniors] = useState([]);
 
 	useEffect(() => {
@@ -28,22 +23,27 @@ function SeniorsTable() {
 					<thead className="sticky top-0">
 						<tr>
 							<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-								<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
-									Name
+								<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center gap-2 font-normal leading-none opacity-70">
 									<SwapVertIcon fontSize="small" />
+									Name
 								</p>
 							</th>
 							<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-								<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
+								<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center gap-2 font-normal leading-none opacity-70">
 									Mobile Number
+								</p>
+							</th>
+							<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+								<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center gap-2 font-normal leading-none opacity-70">
 									<SwapVertIcon fontSize="small" />
+									Address
 								</p>
 							</th>
 
 							<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-								<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
-									Date Joined
+								<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center gap-2 font-normal leading-none opacity-70">
 									<SwapVertIcon fontSize="small" />
+									Date Registered
 								</p>
 							</th>
 							<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
@@ -74,7 +74,15 @@ function SeniorsTable() {
 										</div>
 									</div>
 								</td>
-
+								<td className="p-4 border-b border-blue-gray-50">
+									<div className="flex items-center gap-3">
+										<div className="flex flex-col">
+											<p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal">
+												{senior.user.last_name}
+											</p>
+										</div>
+									</div>
+								</td>
 								<td className="p-4 border-b">
 									<div className="w-max">
 										<div className="relative grid items-center font-sans font-bold uppercase whitespace-nowrap select-none text-gray-600 py-1 px-2 text-sm rounded-md">

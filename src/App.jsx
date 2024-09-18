@@ -12,6 +12,8 @@ import Submission from './routes/Submission'
 import Scanner from "./routes/Scanner";
 import SubmitRequirements from "./routes/SubmitRequirements";
 import PensionStatus from "./routes/PensionStatus";
+import Profile from "./routes/Profile";
+
 function Logout() {
 	localStorage.clear();
 	return <Navigate to="/" />;
@@ -56,6 +58,10 @@ function App() {
 					<Route
 						path="/admin-dashboard"
 						element={<AdminDashboard />}
+					/>
+					<Route
+						path="/profile"
+						element={<Profile />}
 					/>
 					<Route
 						path="/seniors-list"

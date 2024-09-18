@@ -22,6 +22,7 @@ const QRScanner = () => {
 			});
 
 			setIsScanning(false);
+			console.log(data)
 		}
 	};
 

@@ -1,7 +1,4 @@
-import SwapVertIcon from "@mui/icons-material/SwapVert";import { useState, useEffect } from "react";import api from "../../assets/api";import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
-import RequirementsModal from "../RequirementsModal";
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import SwapVertIcon from "@mui/icons-material/SwapVert";import { useState, useEffect } from "react";import api from "../../assets/api";import Swal from "sweetalert2";import withReactContent from "sweetalert2-react-content";import RequirementsModal from "../RequirementsModal";import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import AlarmOnIcon from "@mui/icons-material/AlarmOn";
 
 const MySwal = withReactContent(Swal);
@@ -10,8 +7,6 @@ function PensionList() {
 	const [pensions, setPensions] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
-
-	//const userData = useMemo(() => JSON.parse(localStorage.getItem("userData")), []);
 
 	useEffect(() => {
 		api
@@ -37,7 +32,6 @@ function PensionList() {
 
 	const handleGenerateQr = async (pensionId) => {
 		try {
-			// Show loading state
 			MySwal.fire({
 				title: "Generating QR Code...",
 				text: "Please wait while the QR code is being generated.",
@@ -47,12 +41,8 @@ function PensionList() {
 				},
 			});
 
-			// Make the API call to generate the QR code
 			const response = await api.post(`/api/add-qr-to-pension/${pensionId}/`);
-
-			// Check if the QR code was generated successfully
 			if (response.status === 200) {
-				// Refresh the pension list
 				const updatedPensions = pensions.map((pension) =>
 					pension.id === pensionId ? { ...pension, qr: response.data.qr } : pension
 				);
@@ -74,40 +64,59 @@ function PensionList() {
 		}
 	};
 
+	const handleSendNotification = async (seniorId) => {
+		try {
+			const response = await api.post(`/api/send-notification/${seniorId}/`);
+			if (response.status === 200) {
+				MySwal.fire({
+					icon: "success",
+					title: "Notification Sent",
+					text: "The senior has successfully received the notification.",
+				});
+			}
+		} catch (error) {
+			MySwal.fire({
+				icon: "error",
+				title: "Error",
+				text: "There was an error sending the notification. Please try again.",
+			});
+			console.error("Error sending notification:", error.response?.data || error.message);
+		}
+	};
+
 	return (
 		<div className="p-6 px-0 bg-white rounded-2xl shadow-2xl overflow-x-auto">
 			<table className="w-full table-auto text-left">
 				<thead className="sticky top-0">
 					<tr>
 						<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-							<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
+							<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center gap-2 font-normal leading-none opacity-70">
+								<SwapVertIcon fontSize="small" />
 								Name
-								<SwapVertIcon fontSize="small" />
 							</p>
 						</th>
 						<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-							<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
+							<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center gap-2 font-normal leading-none opacity-70">
+								<SwapVertIcon fontSize="small" />
 								Requirements
-								<SwapVertIcon fontSize="small" />
 							</p>
 						</th>
-
 						<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-							<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
+							<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center gap-2 font-normal leading-none opacity-70">
+								<SwapVertIcon fontSize="small" />
 								Date Submitted
-								<SwapVertIcon fontSize="small" />
 							</p>
 						</th>
 						<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-							<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
+							<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center gap-2 font-normal leading-none opacity-70">
+								<SwapVertIcon fontSize="small" />
 								Status
-								<SwapVertIcon fontSize="small" />
 							</p>
 						</th>
 						<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-							<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
+							<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center gap-2 font-normal leading-none opacity-70">
+								
 								QR Code
-								<SwapVertIcon fontSize="small" />
 							</p>
 						</th>
 						<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
@@ -140,7 +149,6 @@ function PensionList() {
 									</div>
 								</div>
 							</td>
-
 							<td className="p-4 border-b">
 								<div className="w-max">
 									<div className="relative grid items-center font-sans font-bold uppercase whitespace-nowrap select-none text-gray-600 py-1 px-2 text-sm rounded-md">
@@ -193,19 +201,19 @@ function PensionList() {
 							</td>
 							<td className="p-4">
 								<button
-									className={`flex flex-col items-center select-none font-sans font-medium text-center uppercase transition-all ${
-										pension.qr ? "text-blue-500 hover:scale-110" : "text-gray-500 cursor-not-allowed"
-									} w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none duration-300`}
-									type="button"
-									disabled={!pension.qr}>
-									<NotificationsActiveIcon className="mr-1" /> Sent Notification
+									onClick={() => handleSendNotification(pension.seniors.id)}
+									className={`flex flex-col items-center select-none font-sans text-xs font-bold uppercase leading-normal tracking-normal rounded-lg ${
+										pension.seniors.hasReceivedNotification ? "text-gray-400" : "text-red-600"
+									}`}>
+									{pension.seniors.hasReceivedNotification ? (
+										<AlarmOnIcon className="text-gray-400" />
+									) : (
+										<NotificationsActiveIcon className="text-red-600" />
+									)}
+									<span className="block antialiased font-sans text-xs leading-normal">
+										{pension.seniors.hasReceivedNotification ? "Notified" : "Notify"}
+									</span>
 								</button>
-								{/* <button
-									onClick={() => handleDelete(pension.id)}
-									className="flex flex-col items-center select-none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-green-500 hover:scale-110 hover:shadow-2xl duration-300"
-									type="button">
-									<AlarmOnIcon className="mr-1" /> Sent Notification
-								</button> */}
 							</td>
 						</tr>
 					))}

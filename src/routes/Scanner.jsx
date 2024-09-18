@@ -3,7 +3,6 @@ import Swal from "sweetalert2";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import Footer from "../components/Footer";
-import SubmissionTable from "../components/dswd/Submission";
 import QRScanner from '../components/dswd/QRScanner'
 // Utility function to detect mobile or tablet devices
 const isMobileOrTablet = () => {
