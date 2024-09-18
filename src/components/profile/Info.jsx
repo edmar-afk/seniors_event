@@ -1,5 +1,4 @@
-/* eslint-disable react/prop-types */function Info({ isSidebarOpen }) {
-	return (
+/* eslint-disable react/prop-types */ import logo from "../../assets/img/logo.png";function Info({ isSidebarOpen }) {	const userData = JSON.parse(localStorage.getItem("userData"));	return (
 		<>
 			<div
 				className={`transition-all duration-300 ${
@@ -15,11 +14,11 @@
 						</div>
 						<div className="flex flex-col items-center -mt-20">
 							<img
-								src="https://vojislavd.com/ta-template-demo/assets/img/profile.jpg"
+								src={logo}
 								className="w-40 border-4 border-white rounded-full"
 							/>
 							<div className="flex items-center space-x-2 mt-2">
-								<p className="text-2xl">Amanda Ross</p>
+								<p className="text-2xl">{userData.first_name}</p>
 								<span
 									className="bg-blue-500 rounded-full p-1"
 									title="Verified">
@@ -37,8 +36,8 @@
 									</svg>
 								</span>
 							</div>
-							<p className="text-gray-700">Senior Software Engineer at Tailwind CSS</p>
-							<p className="text-sm text-gray-500">New York, USA</p>
+							<p className="text-gray-700">{userData.username}</p>
+							<p className="text-sm text-gray-500">{userData.last_name}</p>
 						</div>
 						<div className="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-2">
 							<div className="flex items-center space-x-4 mt-2">
@@ -55,8 +54,6 @@
 							</div>
 						</div>
 					</div>
-
-					
 				</div>
 			</div>
 		</>

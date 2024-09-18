@@ -2,7 +2,7 @@ import AppBar from "@mui/material/AppBar";import Box from "@mui/material/Box";im
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
-import logo from '../assets/img/logo.jpg'
+import logo from '../assets/img/logo.png'
 export default function NavBar() {
 	return (
 		<Box sx={{ flexGrow: 1 }}>

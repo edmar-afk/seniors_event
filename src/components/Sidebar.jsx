@@ -1,14 +1,13 @@
 /* eslint-disable react/prop-types */
 import { NavLink } from "react-router-dom";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
-import ElderlyOutlinedIcon from "@mui/icons-material/ElderlyOutlined";
 import DashboardCustomizeOutlinedIcon from "@mui/icons-material/DashboardCustomizeOutlined";
 import AccountBoxOutlinedIcon from "@mui/icons-material/AccountBoxOutlined";
 import QueryStatsOutlinedIcon from "@mui/icons-material/QueryStatsOutlined";
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import PublishIcon from "@mui/icons-material/Publish";
 import ChecklistIcon from "@mui/icons-material/Checklist";
-import logo from '../assets/img/logo.jpg';
+import logo from '../assets/img/logo.png';
 function SideBar({ name, number, isOpen }) {
 	const userData = JSON.parse(localStorage.getItem("userData"));
 
