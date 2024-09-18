@@ -29,7 +29,7 @@ function SeniorsTable() {
 		}).then((result) => {
 			if (result.isConfirmed) {
 				api
-					.delete(`/api/seniors/${id}/delete/`)
+					.delete(`/api/users/${id}/delete/`)
 					.then(() => {
 						Swal.fire("Deleted!", "The user has been deleted.", "success").then(() => {
 							// Refresh the list after deletion
@@ -136,7 +136,7 @@ function SeniorsTable() {
 								<button
 									className="flex flex-row items-center select-none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-red-500 hover:scale-110 hover:shadow-2xl duration-300"
 									type="button"
-									onClick={() => handleDelete(senior.id)}>
+									onClick={() => handleDelete(senior.user.id)}>
 									<DeleteForeverOutlinedIcon className="mr-1" /> Remove
 								</button>
 							</td>
