@@ -1,7 +1,4 @@
-import SwapVertIcon from "@mui/icons-material/SwapVert";import { useState, useEffect } from "react";import api from "../../assets/api";import Swal from "sweetalert2";import withReactContent from "sweetalert2-react-content";import RequirementsModal from "../RequirementsModal";import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
-import AlarmOnIcon from "@mui/icons-material/AlarmOn";
-
-const MySwal = withReactContent(Swal);
+import SwapVertIcon from "@mui/icons-material/SwapVert";import { useState, useEffect } from "react";import api from "../../assets/api";import Swal from "sweetalert2";import withReactContent from "sweetalert2-react-content";import RequirementsModal from "../RequirementsModal";import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";import AlarmOnIcon from "@mui/icons-material/AlarmOn";const MySwal = withReactContent(Swal);
 
 function PensionList() {
 	const [pensions, setPensions] = useState([]);
@@ -35,7 +32,7 @@ function PensionList() {
 			MySwal.fire({
 				title: "Generating QR Code...",
 				text: "Please wait while the QR code is being generated.",
-				allowOutsideClick: false,
+				allowOutsideClick: false, // Disable background click close
 				didOpen: () => {
 					MySwal.showLoading();
 				},
@@ -52,6 +49,13 @@ function PensionList() {
 					icon: "success",
 					title: "QR Code Generated",
 					text: "The QR code has been successfully generated.",
+					allowOutsideClick: false, // Disable closing by clicking outside
+					confirmButtonText: "OK",
+				}).then((result) => {
+					if (result.isConfirmed) {
+						// Redirect to /submission after clicking "OK"
+						window.location.href = "/submission";
+					}
 				});
 			}
 		} catch (error) {
@@ -64,25 +68,39 @@ function PensionList() {
 		}
 	};
 
-	const handleSendNotification = async (seniorId) => {
+
+	const handleSendNotification = async (seniorId, seniorName) => {
 		try {
+			// Show the sending notification alert
+			MySwal.fire({
+				title: `Sending Notification to ${seniorName}...`,
+				text: "Please wait while the notification is being sent.",
+				allowOutsideClick: false, // Disable closing by clicking outside
+				didOpen: () => {
+					MySwal.showLoading();
+				},
+			});
+
 			const response = await api.post(`/api/send-notification/${seniorId}/`);
+
 			if (response.status === 200) {
+				// Show success alert when notification is sent
 				MySwal.fire({
 					icon: "success",
 					title: "Notification Sent",
-					text: "The senior has successfully received the notification.",
+					text: `The notification has been successfully sent to ${seniorName}.`,
 				});
 			}
 		} catch (error) {
 			MySwal.fire({
 				icon: "error",
 				title: "Error",
-				text: "There was an error sending the notification. Please try again.",
+				text: `There was an error sending the notification to ${seniorName}. Please try again.`,
 			});
 			console.error("Error sending notification:", error.response?.data || error.message);
 		}
 	};
+
 
 	return (
 		<div className="p-6 px-0 bg-white rounded-2xl shadow-2xl overflow-x-auto">
@@ -115,7 +133,6 @@ function PensionList() {
 						</th>
 						<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
 							<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center gap-2 font-normal leading-none opacity-70">
-								
 								QR Code
 							</p>
 						</th>
@@ -201,7 +218,7 @@ function PensionList() {
 							</td>
 							<td className="p-4">
 								<button
-									onClick={() => handleSendNotification(pension.seniors.id)}
+									onClick={() => handleSendNotification(pension.seniors.id, pension.seniors.first_name)}
 									className={`flex flex-col items-center select-none font-sans text-xs font-bold uppercase leading-normal tracking-normal rounded-lg ${
 										pension.seniors.hasReceivedNotification ? "text-gray-400" : "text-red-600"
 									}`}>

@@ -15,7 +15,7 @@ function Homepage() {
 									<span className="block text-indigo-600 text-4xl"> Senior Citizen Event Scheduling System.</span>
 								</h1>
 								<p className="mx-auto text-base text-gray-500 sm:max-w-md lg:text-xl md:max-w-3xl">
-									It's never been easier to build beautiful websites that convey your message and tell your story.
+									
 								</p>
 								<div className="relative flex flex-col sm:flex-row sm:space-x-4">
 									<p className="flex items-center w-full px-6 py-3 mb-3 text-lg text-indigo-600 rounded-md sm:mb-0 sm:w-auto">
@@ -53,7 +53,7 @@ function Homepage() {
 					</div>
 				</div>
 
-				<div className="text-center text-4xl mt-4">Schedule Calendar Below soon</div>
+				<div className="text-center text-4xl mt-4"></div>
 			</section>
 		</>
 	);
