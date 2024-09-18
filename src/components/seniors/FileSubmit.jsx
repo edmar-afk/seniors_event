@@ -1,4 +1,6 @@
-import { useState } from "react";import api from "../../assets/api"; // Assuming api is your configured axios instance
+import { useState } from "react";import Swal from "sweetalert2";
+import api from "../../assets/api"; // Assuming api is your configured axios instance
+
 const FileSubmit = () => {
 	const [files, setFiles] = useState([]);
 	const [error, setError] = useState(null);
@@ -54,7 +56,7 @@ const FileSubmit = () => {
 		setLoading(true);
 
 		const formData = new FormData();
-		formData.append('seniors', userData.id);
+		formData.append("seniors", userData.id);
 		formData.append("requirement", files[0]);
 		formData.append("status", "Not Eligible"); // Automatically add status
 
@@ -66,7 +68,19 @@ const FileSubmit = () => {
 			});
 
 			console.log("File uploaded successfully:", response.data);
-			// Handle success (e.g., show a success message, clear the form, etc.)
+
+			// Show success alert and redirect
+			Swal.fire({
+				icon: "success",
+				title: "Successfully Uploaded!",
+				text: "You will be redirected shortly.",
+				timer: 3000,
+				timerProgressBar: true,
+				showConfirmButton: false,
+				backdrop: false,
+			}).then(() => {
+				window.location.href = "/pension-status";
+			});
 		} catch (error) {
 			console.error("Error uploading file:", error);
 			setError("There was an error uploading your file. Please try again.");
@@ -74,7 +88,6 @@ const FileSubmit = () => {
 			setLoading(false);
 		}
 	};
-
 
 	return (
 		<>
@@ -125,7 +138,7 @@ const FileSubmit = () => {
 						<img
 							src={preview}
 							alt="Preview"
-							className="max-w-full h-auto rounded-lg border-2 border-gray-800"
+							className="w-96 h-auto rounded-lg border-2 border-gray-800"
 						/>
 					</div>
 

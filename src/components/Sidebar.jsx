@@ -8,6 +8,7 @@ import QueryStatsOutlinedIcon from "@mui/icons-material/QueryStatsOutlined";
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import PublishIcon from "@mui/icons-material/Publish";
 import ChecklistIcon from "@mui/icons-material/Checklist";
+import logo from '../assets/img/logo.jpg';
 function SideBar({ name, number, isOpen }) {
 	const userData = JSON.parse(localStorage.getItem("userData"));
 
@@ -18,9 +19,9 @@ function SideBar({ name, number, isOpen }) {
 				isOpen ? "translate-x-0" : "-translate-x-64"
 			} ease-in-out transition-transform duration-300 flex justify-start items-start h-full w-64 bg-blue-900 flex-col shadow-2xl`}>
 			<div className="flex justify-start p-6 items-center space-x-3">
-				<ElderlyOutlinedIcon
-					sx={{ fontSize: 50 }}
-					className="text-white border-2 p-2 rounded-full"
+				<img
+					src={logo}
+					alt="" className="w-12 rounded-full"
 				/>
 				<p className="text-lg leading-6 text-white">Seniors Pension</p>
 			</div>

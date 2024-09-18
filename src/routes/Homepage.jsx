@@ -1,4 +1,6 @@
-/* eslint-disable react/no-unescaped-entities */ import bg from "../assets/img/bg.jpg";import { Link } from "react-router-dom";
+/* eslint-disable react/no-unescaped-entities */ import bg from "../assets/img/bg.jpg";
+
+import { Link } from "react-router-dom";
 function Homepage() {
 	return (
 		<>
