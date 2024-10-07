@@ -2,6 +2,8 @@ import SwapVertIcon from "@mui/icons-material/SwapVert";import { useState, useEf
 import api from "../../assets/api";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import Swal from "sweetalert2";
+import { Tooltip } from "react-tooltip";
+
 
 function SeniorsTable() {
 	const [seniors, setSeniors] = useState([]);
@@ -51,6 +53,24 @@ function SeniorsTable() {
 		});
 	};
 
+	const calculateAge = (dob) => {
+		const birthDate = new Date(dob);
+		const currentDate = new Date();
+
+		let age = currentDate.getFullYear() - birthDate.getFullYear();
+
+		// Adjust age if the birthdate hasn't occurred yet this year
+		const isBirthdayPassed =
+			currentDate.getMonth() > birthDate.getMonth() ||
+			(currentDate.getMonth() === birthDate.getMonth() && currentDate.getDate() >= birthDate.getDate());
+
+		if (!isBirthdayPassed) {
+			age--;
+		}
+
+		return age;
+	};
+
 	// Filter out superusers
 	const filteredSeniors = seniors.filter((senior) => !senior.user.is_superuser);
 
@@ -63,6 +83,11 @@ function SeniorsTable() {
 							<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center gap-2 font-normal leading-none opacity-70">
 								<SwapVertIcon fontSize="small" />
 								Name
+							</p>
+						</th>
+						<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+							<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center gap-2 font-normal leading-none opacity-70">
+								Age
 							</p>
 						</th>
 						<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
@@ -101,6 +126,21 @@ function SeniorsTable() {
 									</div>
 								</div>
 							</td>
+							<td
+								className="p-4 border-b border-blue-gray-50"
+								data-tooltip-id="my-tooltip"
+								data-tooltip-content={`Date of Birth: ${senior.dob}`}
+								data-tooltip-place="top">
+								<div className="flex items-center gap-3">
+									<div className="flex flex-col">
+										<p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal">
+											{calculateAge(senior.dob)} years old
+										</p>
+									</div>
+								</div>
+								<Tooltip id="my-tooltip" />
+							</td>
+
 							<td className="p-4 border-b border-blue-gray-50">
 								<div className="flex items-center gap-3">
 									<div className="flex flex-col">

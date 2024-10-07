@@ -1,6 +1,9 @@
-import SwapVertIcon from "@mui/icons-material/SwapVert";import { useState, useEffect } from "react";import api from "../../assets/api";import Swal from "sweetalert2";import withReactContent from "sweetalert2-react-content";import RequirementsModal from "../RequirementsModal";import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";import AlarmOnIcon from "@mui/icons-material/AlarmOn";const MySwal = withReactContent(Swal);
-
-function PensionList() {
+/* eslint-disable react/prop-types */import SwapVertIcon from "@mui/icons-material/SwapVert";import { useState, useEffect } from "react";import api from "../../assets/api";import Swal from "sweetalert2";import withReactContent from "sweetalert2-react-content";
+import RequirementsModal from "../RequirementsModal";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import AlarmOnIcon from "@mui/icons-material/AlarmOn";
+const MySwal = withReactContent(Swal);
+function PensionList({ isOn }) {
 	const [pensions, setPensions] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
@@ -68,7 +71,6 @@ function PensionList() {
 		}
 	};
 
-
 	const handleSendNotification = async (seniorId, seniorName) => {
 		try {
 			// Show the sending notification alert
@@ -101,9 +103,9 @@ function PensionList() {
 		}
 	};
 
-
 	return (
-		<div className="p-6 px-0 bg-white rounded-2xl shadow-2xl overflow-x-auto">
+		<div
+			className={`p-6 px-0 rounded-2xl ${isOn ? "bg-white " : "bg-red-100 shadow-red-800"} shadow-2xl overflow-x-auto`}>
 			<table className="w-full table-auto text-left">
 				<thead className="sticky top-0">
 					<tr>
@@ -160,7 +162,19 @@ function PensionList() {
 										<RequirementsModal
 											imageUrl={pension.requirement}
 											name={pension.seniors.first_name}
-											title="View Requirements"
+											title="Grantee Picture"
+											subTitle="Requirements"
+										/>
+										<RequirementsModal
+											imageUrl={pension.requirement1}
+											name={pension.seniors.first_name}
+											title="Senior ID"
+											subTitle="Requirements"
+										/>
+										<RequirementsModal
+											imageUrl={pension.requirement2}
+											name={pension.seniors.first_name}
+											title="Authorization Letter"
 											subTitle="Requirements"
 										/>
 									</div>

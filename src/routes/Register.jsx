@@ -1,5 +1,4 @@
-/* eslint-disable react/no-unescaped-entities */import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import bg from "../assets/img/bg.jpg";
 import api from "../assets/api";
@@ -14,26 +13,36 @@ function Register() {
 		address: "",
 		password: "",
 		password2: "",
+		dob: "", // Added validation for date of birth
 	});
-	const [formData, setFormData] = useState({ fullName: "", number: "", address: "", password: "", password2: "" });
+	const [formData, setFormData] = useState({
+		fullName: "",
+		number: "",
+		address: "",
+		password: "",
+		password2: "",
+		dob: "", // New state for date of birth
+	});
 	const navigate = useNavigate();
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 
-		if (name === "number") {
+		// Handle date of birth separately
+		if (name === "dob") {
+			setFormData({
+				...formData,
+				[name]: value,
+			});
+		} else if (name === "number") {
 			setFormData({
 				...formData,
 				[name]: value,
 			});
 
-			// Validate number field
 			const isValid = /^09\d{9}$/.test(value);
 			if (value === "" || isValid) {
-				setValidationError({
-					...validationError,
-					number: "",
-				});
+				setValidationError({ ...validationError, number: "" });
 			} else {
 				setValidationError({
 					...validationError,
@@ -41,51 +50,31 @@ function Register() {
 				});
 			}
 		} else if (name === "address") {
-			setFormData({
-				...formData,
-				[name]: value,
-			});
+			setFormData({ ...formData, [name]: value });
 		} else if (name === "password") {
-			setFormData({
-				...formData,
-				[name]: value,
-			});
+			setFormData({ ...formData, [name]: value });
 
-			// Validate password
 			if (value.length < 6) {
 				setValidationError({
 					...validationError,
 					password: "Password must be at least 6 characters long.",
 				});
 			} else {
-				setValidationError({
-					...validationError,
-					password: "",
-				});
+				setValidationError({ ...validationError, password: "" });
 			}
 		} else if (name === "password2") {
-			setFormData({
-				...formData,
-				[name]: value,
-			});
+			setFormData({ ...formData, [name]: value });
 
-			// Validate password2
 			if (value !== formData.password) {
 				setValidationError({
 					...validationError,
 					password2: "Passwords do not match.",
 				});
 			} else {
-				setValidationError({
-					...validationError,
-					password2: "",
-				});
+				setValidationError({ ...validationError, password2: "" });
 			}
 		} else {
-			setFormData({
-				...formData,
-				[name]: value,
-			});
+			setFormData({ ...formData, [name]: value });
 		}
 	};
 
@@ -104,9 +93,10 @@ function Register() {
 			const response = await api.post("/api/register/", {
 				username: formData.number,
 				first_name: formData.fullName,
-				last_name: formData.address, // Make sure address is passed as last_name
+				last_name: formData.address,
 				mobile_num: formData.number,
 				password: formData.password,
+				dob: formData.dob,
 			});
 			if (response.status === 201) {
 				let timerInterval;
@@ -148,9 +138,10 @@ function Register() {
 			Object.values(validationError).some((msg) => msg.length > 0) ||
 			!formData.fullName ||
 			!formData.number ||
-			!formData.address || // Ensure address is included
+			!formData.address ||
 			!formData.password ||
-			!formData.password2
+			!formData.password2 ||
+			!formData.dob // Check if dob is filled
 		);
 	};
 
@@ -194,6 +185,7 @@ function Register() {
 									/>
 									{validationError.fullName && <p className="text-red-600 mt-2">{validationError.fullName}</p>}
 								</motion.div>
+
 								<motion.div
 									initial={{ scale: 0 }}
 									animate={{ scale: 1 }}
@@ -210,6 +202,31 @@ function Register() {
 									/>
 									{validationError.number && <p className="text-red-600 mt-2">{validationError.number}</p>}
 								</motion.div>
+
+								<motion.div className="relative w-full">
+									<p className="font-bold mb-1">Your Date of Birth:</p>
+									<div className="absolute inset-y-0 start-0 flex items-center ps-3.5 top-6 pointer-events-none">
+										<svg
+											className="w-4 h-4 text-gray-500 dark:text-gray-400"
+											aria-hidden="true"
+											xmlns="http://www.w3.org/2000/svg"
+											fill="currentColor"
+											viewBox="0 0 20 20">
+											<path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+										</svg>
+									</div>
+									<input
+										name="dob" // New input name for date of birth
+										type="date"
+										className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5"
+										placeholder="Select date"
+										value={formData.dob}
+										onChange={handleChange} // Handle date change
+										required
+									/>
+									{validationError.dob && <p className="text-red-600 mt-2">{validationError.dob}</p>}
+								</motion.div>
+
 								<motion.div
 									initial={{ scale: 0 }}
 									animate={{ scale: 1 }}
@@ -230,11 +247,12 @@ function Register() {
 										<option value="Poblacion Lakewood">Poblacion Lakewood</option>
 										<option value="Baking">Baking</option>
 										<option value="Biswangan">Biswangan</option>
-										<option value="Lukuan">Lukuan</option>
-										<option value="Kahayag">Kahayag</option>
+										<option value="Lumbayao">Lumbayao</option>
+										<option value="Tinangisan">Tinangisan</option>
 									</select>
 									{validationError.address && <p className="text-red-600 mt-2">{validationError.address}</p>}
 								</motion.div>
+
 								<motion.div
 									initial={{ scale: 0 }}
 									animate={{ scale: 1 }}
@@ -250,6 +268,7 @@ function Register() {
 									/>
 									{validationError.password && <p className="text-red-600 mt-2">{validationError.password}</p>}
 								</motion.div>
+
 								<motion.div
 									initial={{ scale: 0 }}
 									animate={{ scale: 1 }}
@@ -266,25 +285,23 @@ function Register() {
 									{validationError.password2 && <p className="text-red-600 mt-2">{validationError.password2}</p>}
 								</motion.div>
 
-								<div className="pt-2">
-									<button
-										type="submit"
-										disabled={loading || isFormInvalid()}
-										className="bg-blue-600 text-sm w-full py-3.5 rounded-md text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
-										{loading ? "Registering..." : "Register"}
-									</button>
-								</div>
+								{error && <p className="text-red-600 mt-4">{error}</p>}
 
-								{error && <p className="text-red-600 text-center text-sm mt-4">{error}</p>}
-							</div>
+								<motion.button
+									type="submit"
+									disabled={loading || isFormInvalid()}
+									className={`bg-blue-600 w-full text-white rounded-md px-4 py-3 ${
+										loading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+									}`}>
+									{loading ? "Loading..." : "Create Account"}
+								</motion.button>
 
-							<div className="text-center mt-8">
-								<p className="text-sm">
+								<p className="text-center mt-4">
 									Already have an account?{" "}
 									<Link
 										to="/login"
-										className="font-medium text-blue-600 hover:underline">
-										Login
+										className="text-blue-600 hover:underline">
+										Login here
 									</Link>
 								</p>
 							</div>

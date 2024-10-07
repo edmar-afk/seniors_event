@@ -1,10 +1,4 @@
-import SwapVertIcon from "@mui/icons-material/SwapVert";import { useState, useEffect, useMemo } from "react";
-import api from "../../assets/api";
-import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-import RequirementsModal from "../RequirementsModal";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
-const MySwal = withReactContent(Swal);
+import SwapVertIcon from "@mui/icons-material/SwapVert";import { useState, useEffect, useMemo } from "react";import api from "../../assets/api";import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";import RequirementsModal from "../RequirementsModal";import Swal from "sweetalert2";import withReactContent from "sweetalert2-react-content";const MySwal = withReactContent(Swal);
 
 function PensionTable() {
 	const [pensions, setPensions] = useState([]);
@@ -71,7 +65,19 @@ function PensionTable() {
 					<tr>
 						<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
 							<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
-								Requirements
+								Picture of Grantee <br /> with Calendar
+								<SwapVertIcon fontSize="small" />
+							</p>
+						</th>
+						<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+							<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
+								Senior ID
+								<SwapVertIcon fontSize="small" />
+							</p>
+						</th>
+						<th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+							<p className="antialiased font-sans text-sm text-blue-gray-900 flex items-center justify-between gap-2 font-normal leading-none opacity-70">
+								Authorization Letter
 								<SwapVertIcon fontSize="small" />
 							</p>
 						</th>
@@ -108,6 +114,30 @@ function PensionTable() {
 									<div className="flex flex-col">
 										<RequirementsModal
 											imageUrl={pension.requirement}
+											name={pension.seniors.first_name}
+											title="View Requirements"
+											subTitle="Requirements"
+										/>
+									</div>
+								</div>
+							</td>
+							<td className="p-4 border-b border-blue-gray-50">
+								<div className="flex items-center gap-3">
+									<div className="flex flex-col">
+										<RequirementsModal
+											imageUrl={pension.requirement1}
+											name={pension.seniors.first_name}
+											title="View Requirements"
+											subTitle="Requirements"
+										/>
+									</div>
+								</div>
+							</td>
+							<td className="p-4 border-b border-blue-gray-50">
+								<div className="flex items-center gap-3">
+									<div className="flex flex-col">
+										<RequirementsModal
+											imageUrl={pension.requirement2}
 											name={pension.seniors.first_name}
 											title="View Requirements"
 											subTitle="Requirements"

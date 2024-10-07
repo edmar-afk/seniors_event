@@ -1,6 +1,48 @@
-import adminLogo from "../assets/svg/adminLogo.svg";import ElderlyWomanIcon from "@mui/icons-material/ElderlyWoman";import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";import UnsubscribeIcon from "@mui/icons-material/Unsubscribe";
+import { useEffect, useState } from "react";import adminLogo from "../assets/svg/adminLogo.svg";import ElderlyWomanIcon from "@mui/icons-material/ElderlyWoman";
+import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
+import UnsubscribeIcon from "@mui/icons-material/Unsubscribe";
+import api from "../assets/api"; // Assuming api.get is configured for API calls
+
 function Greet() {
 	const userData = JSON.parse(localStorage.getItem("userData"));
+	const [submissionCount, setSubmissionCount] = useState(0); // State to store the submission count
+	const [nonSubmissionCount, setNonSubmissionCount] = useState(0); // State to store the non-submission count
+	const [registeredUsersCount, setRegisteredUsersCount] = useState(0); // State to store the count of registered users excluding superusers
+
+	// Fetch the counts using api.get
+	useEffect(() => {
+		const fetchSubmissionCount = async () => {
+			try {
+				const response = await api.get("/api/pension/submission-count/");
+				setSubmissionCount(response.data.submission_count);
+			} catch (error) {
+				console.error("Failed to fetch submission count:", error);
+			}
+		};
+
+		const fetchNonSubmissionCount = async () => {
+			try {
+				const response = await api.get("/api/pension/non-submission-count/");
+				setNonSubmissionCount(response.data.non_submission_count);
+			} catch (error) {
+				console.error("Failed to fetch non-submission count:", error);
+			}
+		};
+
+		const fetchRegisteredUsersCount = async () => {
+			try {
+				const response = await api.get("/api/users/registered-count/"); // Fetch count of users excluding superusers
+				setRegisteredUsersCount(response.data.registered_users_count);
+			} catch (error) {
+				console.error("Failed to fetch registered users count:", error);
+			}
+		};
+
+		fetchSubmissionCount();
+		fetchNonSubmissionCount();
+		fetchRegisteredUsersCount();
+	}, []);
+
 	return (
 		<>
 			<div className="w-full flex flex-row my-8 justify-between flex-wrap sm:flex-nowrap text-white">
@@ -12,7 +54,8 @@ function Greet() {
 						/>
 					</div>
 					<div className="flex-grow flex flex-col ml-4">
-						<span className="text-xl font-bold">21</span>
+						<span className="text-xl font-bold">{registeredUsersCount}</span>{" "}
+						{/* Display count of registered users excluding superusers */}
 						<div className="flex items-center justify-between">
 							<span className="text-gray-200">Total Registered Seniors</span>
 						</div>
@@ -27,7 +70,7 @@ function Greet() {
 						/>
 					</div>
 					<div className="flex-grow flex flex-col ml-4">
-						<span className="text-xl font-bold">211 Today</span>
+						<span className="text-xl font-bold">{nonSubmissionCount} Today</span> {/* Display non-submission count */}
 						<div className="flex items-center justify-between">
 							<span className="text-gray-100">Seniors not Submitting Requirements</span>
 						</div>
@@ -42,13 +85,14 @@ function Greet() {
 						/>
 					</div>
 					<div className="flex-grow flex flex-col ml-4">
-						<span className="text-xl font-bold">140 Today</span>
+						<span className="text-xl font-bold">{submissionCount} Today</span> {/* Display submission count */}
 						<div className="flex items-center justify-between">
 							<span className="text-gray-100">Seniors Submitted Requirements</span>
 						</div>
 					</div>
 				</div>
 			</div>
+
 			<div className="flex flex-row justify-evenly flex-wrap sm:flex-nowrap items-center">
 				<div className="p-3 rounded-xl bg-orange-200">
 					<div className="flex flex-row justify-between items-center flex-wrap sm:flex-nowrap">

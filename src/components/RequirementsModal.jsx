@@ -1,5 +1,4 @@
-/* eslint-disable react/no-unescaped-entities */ /* eslint-disable react/prop-types */ import * as React from "react";
-import Modal from "@mui/joy/Modal";
+/* eslint-disable react/no-unescaped-entities */ /* eslint-disable react/prop-types */ import * as React from "react";import Modal from "@mui/joy/Modal";
 import ModalClose from "@mui/joy/ModalClose";
 import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
@@ -14,7 +13,9 @@ export default function RequirementsModal({ imageUrl, name, title, subTitle }) {
 
 		fetch(e.target.href, {
 			method: "GET",
-			headers: {},
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
 		})
 			.then((response) => {
 				if (!response.ok) {
