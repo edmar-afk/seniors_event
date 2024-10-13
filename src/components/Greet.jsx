@@ -94,7 +94,7 @@ function Greet() {
 			</div>
 
 			<div className="flex flex-row justify-evenly flex-wrap sm:flex-nowrap items-center">
-				<div className="p-3 rounded-xl bg-orange-200">
+				<div className="p-3 rounded-xl bg-blue-600">
 					<div className="flex flex-row justify-between items-center flex-wrap sm:flex-nowrap">
 						<div className="flex flex-col text-white font-extrabold p-3 sm:p-8">
 							<p className="text-lg sm:text-4xl font-serif">Hello, {userData.first_name}!</p>
