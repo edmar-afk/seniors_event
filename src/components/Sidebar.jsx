@@ -8,9 +8,32 @@ import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import PublishIcon from "@mui/icons-material/Publish";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import logo from '../assets/img/logo.png';
+import { useEffect, useState } from "react";
+import api from "../assets/api";
+
 function SideBar({ name, number, isOpen }) {
 	const userData = JSON.parse(localStorage.getItem("userData"));
+	const [profilePic, setProfilePic] = useState(); // Default to logo if no profile pic
+	
+	useEffect(() => {
+		const fetchUserProfile = async () => {
+			try {
+				const response = await api.get(`/api/profile/${userData.id}/`); // Fetch profile by user ID
+				const profileData = response.data;
 
+				if (profileData.profile_pic) {
+					setProfilePic(profileData.profile_pic); // Use profile picture if available
+				} else {
+					setProfilePic(logo); // Use default logo if no profile picture is set
+				}
+			} catch (error) {
+				console.error("Error fetching user profile:", error);
+				setProfilePic(logo); // Fallback to default logo on error
+			}
+		};
+
+		fetchUserProfile();
+	}, [userData.id]);
 	return (
 		<div
 			id="Main"
@@ -20,7 +43,8 @@ function SideBar({ name, number, isOpen }) {
 			<div className="flex justify-start p-6 items-center space-x-3">
 				<img
 					src={logo}
-					alt="" className="w-12 rounded-full"
+					alt=""
+					className="w-12 rounded-full"
 				/>
 				<p className="text-lg leading-6 text-white">Seniors Pension</p>
 			</div>
@@ -144,10 +168,21 @@ function SideBar({ name, number, isOpen }) {
 			<div className="flex flex-col justify-end items-center h-full pb-6 pt-4 px-6 w-full space-y-32">
 				<div className="flex justify-between items-center w-full">
 					<div className="flex justify-center items-center space-x-2">
-						<AccountCircleOutlinedIcon
-							fontSize="large"
-							className="text-white"
-						/>
+						{setProfilePic ? (
+							<img
+								src={profilePic}
+								alt="User profile picture"
+								className="w-12 h-12 rounded-full"
+								loading="lazy" // Optional: improve performance by lazy loading the image
+							/>
+						) : (
+							<AccountCircleOutlinedIcon
+								fontSize="large"
+								className="text-white"
+								aria-label="Default profile icon" // Optional: for accessibility
+							/>
+						)}
+
 						<div className="flex justify-start flex-col items-start">
 							<p className="cursor-pointer text-sm leading-5 text-white">{name}</p>
 							<p className="cursor-pointer text-xs leading-3 text-gray-300">{number}</p>

@@ -1,9 +1,8 @@
-import SwapVertIcon from "@mui/icons-material/SwapVert";import { useState, useEffect } from "react";
-import api from "../../assets/api";
+import SwapVertIcon from "@mui/icons-material/SwapVert";import { useState, useEffect } from "react";import api from "../../assets/api";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import Swal from "sweetalert2";
 import { Tooltip } from "react-tooltip";
-
+import logo from '../../assets/img/logo.jpg'
 
 function SeniorsTable() {
 	const [seniors, setSeniors] = useState([]);
@@ -119,7 +118,12 @@ function SeniorsTable() {
 						<tr key={senior.id}>
 							<td className="p-4 border-b border-blue-gray-50">
 								<div className="flex items-center gap-3">
-									<div className="flex flex-col">
+									<div className="flex flex-row items-center">
+										<img
+											src={senior.profile_pic ? senior.profile_pic : logo}
+											alt="Profile"
+											className="w-14 h-14 rounded-full mr-2"
+										/>
 										<p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal">
 											{senior.user.first_name}
 										</p>

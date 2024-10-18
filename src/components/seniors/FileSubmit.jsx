@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";import Swal from "sweetalert2";import api from "../../assets/api";
+import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import api from "../../assets/api";
 import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
-
 const FileSubmit = () => {
 	const [files, setFiles] = useState({ requirement: null, requirement1: null, requirement2: null });
 	const [previews, setPreviews] = useState({ requirement: null, requirement1: null, requirement2: null });
@@ -23,11 +24,19 @@ const FileSubmit = () => {
 
 	const handleFileChange = (e, fieldName) => {
 		const file = e.target.files[0];
+
 		if (!file.type.startsWith("image/")) {
 			setError("Only image files are allowed.");
 			return;
 		}
 
+		if (file.size < 10240) {
+			// 10KB is 10240 bytes
+			setError("The file size is too small. Please upload a clearer image.");
+			return;
+		}
+
+		setError(null); // Clear any previous errors
 		setFiles({ ...files, [fieldName]: file });
 
 		const reader = new FileReader();
@@ -80,6 +89,7 @@ const FileSubmit = () => {
 
 	const renderFileInput = (name, label) => (
 		<div className="my-12">
+			<p className="text-xs mb-1 text-gray-600">System wont accept files with less than 10kb to avoid blurry images</p>
 			<div
 				className={`flex justify-center items-center w-96 h-96 p-4 border-2 border-dashed bg-gray-100 border-blue-800 rounded-lg cursor-pointer ${
 					!submissionStatus ? "opacity-50 cursor-not-allowed" : ""
@@ -116,10 +126,15 @@ const FileSubmit = () => {
 				Warning: Uploading incorrect or invalid image files may result in the rejection of your submission and further
 				delay in the release of your pension.
 			</p>
-			<p className="text-xs px-4 mt-3 text-red-800">
+			<p className="bg-red-50 text-red-600 py-3 w-fit px-4 sm:rounded-full font-bold shadow-md mt-2">
+				<ReportGmailerrorredIcon />
 				Pahimangno: Ang pag-upload og sayop o dili balidong mga file sa hulagway mahimong hinungdan sa pagdumili sa
 				imong gi-submit ug mahimong hinungdan sa dugang paglangan sa pagpagawas sa imong pensyon.
 			</p>
+			{/* <p className="text-xs px-4 mt-3 text-red-800">
+				Pahimangno: Ang pag-upload og sayop o dili balidong mga file sa hulagway mahimong hinungdan sa pagdumili sa
+				imong gi-submit ug mahimong hinungdan sa dugang paglangan sa pagpagawas sa imong pensyon.
+			</p> */}
 			<div className="flex flex-row justify-evenly w-full flex-wrap">
 				{renderFileInput("requirement", "Picture of Grantee with Calendar")}
 				{renderFileInput("requirement1", "Senior ID")}
