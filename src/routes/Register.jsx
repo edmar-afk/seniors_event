@@ -248,7 +248,7 @@ function Register() {
 										<option value="Baking">Baking</option>
 										<option value="Biswangan">Biswangan</option>
 										<option value="Lumbayao">Lukuan</option>
-										<option value="Tinangisan">Tinangisan</option>
+										
 									</select>
 									{validationError.address && <p className="text-red-600 mt-2">{validationError.address}</p>}
 								</motion.div>
