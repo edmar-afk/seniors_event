@@ -247,7 +247,7 @@ function Register() {
 										<option value="Poblacion Lakewood">Poblacion Lakewood</option>
 										<option value="Baking">Baking</option>
 										<option value="Biswangan">Biswangan</option>
-										<option value="Lumbayao">Lumbayao</option>
+										<option value="Lumbayao">Lukuan</option>
 										<option value="Tinangisan">Tinangisan</option>
 									</select>
 									{validationError.address && <p className="text-red-600 mt-2">{validationError.address}</p>}
