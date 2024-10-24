@@ -1,4 +1,5 @@
-import { useState } from "react";import QrScanner from "react-qr-scanner";import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import { useState } from "react";import QrScanner from "react-qr-scanner";
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import DoneAllOutlinedIcon from "@mui/icons-material/DoneAllOutlined";
 
 const QRScanner = () => {
@@ -32,7 +33,6 @@ const QRScanner = () => {
 		}
 	};
 
-
 	const handleError = (err) => {
 		console.error(err);
 	};
@@ -58,6 +58,7 @@ const QRScanner = () => {
 						onError={handleError}
 						onScan={handleScan}
 						className="w-full h-full rounded-md"
+						constraints={{ facingMode: "environment" }} // Use back-facing camera
 					/>
 					<p className="mt-4 text-center text-gray-600">{scanMessage}</p>
 				</div>
